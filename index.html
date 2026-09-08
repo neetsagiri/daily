@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Typography Pro</title>
-    <!-- Nhập font chữ tối ưu hiển thị số và ký tự game cực đẹp từ Google Fonts -->
+    <title>Gaming Account Manager - Fixed Mobile Keyboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -19,7 +18,6 @@
             background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
 
-        /* Áp dụng font Mono cho vùng nhập liệu để dễ phân biệt các ký tự mật khẩu */
         input, code, .mono-text {
             font-family: 'JetBrains Mono', monospace;
         }
@@ -46,7 +44,6 @@
         .gaming-checkbox:checked { background: linear-gradient(135deg, #06b6d4, #a855f7); border-color: #38bdf8; box-shadow: 0 0 10px rgba(6,182,212,0.8); }
         .gaming-checkbox:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #030712; font-size: 0.85rem; font-weight: 900; }
 
-        /* Ô nhập liệu cải tiến chữ sáng rõ, dễ đọc */
         .sheets-cell {
             background: rgba(15, 23, 42, 0.7); 
             border: 1px solid #334155; 
@@ -78,6 +75,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            white-space: nowrap;
         }
         .copy-btn:hover {
             background: rgba(6, 182, 212, 0.25);
@@ -172,6 +170,7 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_Y_aylmeYgUD59Wj651vjLg7dEIjDaiZPFQzhdHmXXPPSO2AWNmeB5nM94B7DUVai/exec";
 
         let accounts = [];
+        let isMobileView = window.innerWidth < 768;
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -293,7 +292,7 @@
             const container = document.getElementById('container-body');
             container.innerHTML = '';
 
-            if (window.innerWidth >= 768) {
+            if (!isMobileView) {
                 let tableHtml = `
                     <div class="overflow-x-auto rounded-xl border border-slate-800">
                         <table class="w-full border-collapse text-center text-sm">
@@ -410,10 +409,6 @@
 
             updateProgress();
         }
-
-        window.addEventListener('resize', () => {
-            renderUI();
-        });
 
         fetchSheetData();
     </script>
