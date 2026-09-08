@@ -73,13 +73,13 @@
                 <thead>
                     <tr class="bg-slate-950 text-cyan-300 text-xs border-b border-cyan-500/30">
                         <th class="p-3 text-left">TÀI KHOẢN & MẬT KHẨU</th>
-                        <th class="p-3">THỨ 2</th>
-                        <th class="p-3">THỨ 3</th>
-                        <th class="p-3">THỨ 4</th>
-                        <th class="p-3">THỨ 5</th>
-                        <th class="p-3">THỨ 6</th>
-                        <th class="p-3">THỨ 7</th>
-                        <th class="p-3">CHỦ NHẬT</th>
+                        <th class="p-3 th-day" data-day="mon">THỨ 2</th>
+                        <th class="p-3 th-day" data-day="tue">THỨ 3</th>
+                        <th class="p-3 th-day" data-day="wed">THỨ 4</th>
+                        <th class="p-3 th-day" data-day="thu">THỨ 5</th>
+                        <th class="p-3 th-day" data-day="fri">THỨ 6</th>
+                        <th class="p-3 th-day" data-day="sat">THỨ 7</th>
+                        <th class="p-3 th-day" data-day="sun">CHỦ NHẬT</th>
                         <th class="p-3 text-left pl-6">WEEKLY (CHECK & NOTE)</th>
                     </tr>
                 </thead>
@@ -151,6 +151,19 @@
             const tbody = document.getElementById('account-table-body');
             tbody.innerHTML = '';
 
+            // Kiểm tra xem ngày nào đã hoàn thành ở TẤT CẢ các tài khoản để ẩn tiêu đề cột tương ứng
+            daysList.forEach(day => {
+                const thElement = document.querySelector(`th.th-day[data-day="${day}"]`);
+                if (thElement) {
+                    if (hideCompleted) {
+                        const allCompleted = accountsData.every(acc => acc.days && acc.days[day]);
+                        thElement.style.display = allCompleted ? 'none' : '';
+                    } else {
+                        thElement.style.display = '';
+                    }
+                }
+            });
+
             accountsData.forEach((acc, index) => {
                 let rowHtml = `<tr class="hover:bg-slate-800/40 transition-all">
                     <td class="p-3 text-left font-medium text-cyan-300">
@@ -161,7 +174,6 @@
                 daysList.forEach(day => {
                     const isChecked = acc.days[day] || false;
                     const isHidden = (hideCompleted && isChecked);
-                    // Dùng display: none để ẩn hoàn toàn kể cả Thứ 2
                     const displayStyle = isHidden ? 'style="display: none;"' : '';
                     
                     rowHtml += `
