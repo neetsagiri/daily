@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Auto Cloud Sync</title>
+    <title>Gaming Account Manager - Cloud Sheets</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -112,10 +112,10 @@
             <div>
                 <div class="flex items-center space-x-2 mb-1">
                     <span class="inline-block w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
-                    <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">Zero-Config Cloud Active</span>
+                    <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">Stable Cloud Sync Active</span>
                 </div>
                 <h1 class="text-2xl md:text-3xl font-black tracking-wider uppercase neon-title">
-                    ⚡ GAMING // AUTO_SYNC_CORE
+                    ⚡ GAMING // CLOUD_SHEETS
                 </h1>
                 <p class="text-xs text-slate-400 mt-1">Chỉnh sửa trực tiếp trên ô + Tự động lưu trữ thời gian thực đa thiết bị</p>
             </div>
@@ -166,7 +166,7 @@
 
         <!-- Footer Info -->
         <div class="mt-6 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2 relative z-10">
-            <span>🛡️ Tự động lưu & đồng bộ không cần cấu hình. Reset Daily vào Thứ Hai hàng tuần.</span>
+            <span>🛡️ Tự động lưu & đồng bộ thời gian thực mượt mà. Reset Daily vào Thứ Hai hàng tuần.</span>
             <button onclick="resetData()" class="text-red-400 hover:text-red-300 font-bold transition-colors cursor-pointer bg-red-950/30 px-3 py-1 rounded border border-red-500/20">
                 ⚠️ Khôi phục dữ liệu gốc
             </button>
@@ -175,9 +175,8 @@
     </div>
 
     <script>
-        // Sử dụng một bin JSON công khai miễn phí được tạo riêng cho bảng của bạn để tự động lưu không cần cấu hình
-        const BIN_ID = "675fbf80e41b4d34e4604812"; 
-        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        // Sử dụng dịch vụ cloud storage ổn định qua npoint.io (cho phép đọc/ghi trực tiếp không cần cấu hình)
+        const CLOUD_URL = "https://api.npoint.io/4621c38575971db3f0ea";
 
         function getWeekNumber(d) {
             d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -187,7 +186,7 @@
             return d.getUTCFullYear() + '-W' + weekNo;
         }
 
-        let accountsData = JSON.parse(localStorage.getItem('noconfig_accounts')) || [
+        let accountsData = JSON.parse(localStorage.getItem('npoint_accounts')) || [
             {
                 id: 1,
                 username: "user_01",
@@ -200,31 +199,28 @@
         let hideCompleted = false;
         const daysList = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
-        // Tự động kéo dữ liệu từ đám mây khi mở trang
+        // Tự động tải dữ liệu từ Cloud
         async function fetchFromCloud() {
             const statusEl = document.getElementById('syncStatus');
             statusEl.innerText = "SYNCING...";
             try {
-                const res = await fetch(API_URL + "/latest", {
-                    headers: { 'X-Access-Master-Key': '$2a$10$7v2u8QvF1Y7U8H5V3Z1X5e3r2t1y0u9i8o7p6a5s4d3f2g1h0j9k8' } // Public read key
-                });
+                const res = await fetch(CLOUD_URL, { cache: "no-store" });
                 if (res.ok) {
                     const json = await res.json();
-                    if (json.record && Array.isArray(json.record)) {
-                        accountsData = json.record;
+                    if (Array.isArray(json) && json.length > 0) {
+                        accountsData = json;
                         
-                        // Kiểm tra reset tuần mới tự động
                         let currentWeek = getWeekNumber(new Date());
-                        let savedWeek = localStorage.getItem('noconfig_week');
+                        let savedWeek = localStorage.getItem('npoint_week');
                         if (savedWeek !== currentWeek) {
                             accountsData.forEach(acc => {
                                 if (acc.days) Object.keys(acc.days).forEach(day => acc.days[day] = false);
                                 if (acc.weekly) acc.weekly.checked = false;
                             });
-                            localStorage.setItem('noconfig_week', currentWeek);
+                            localStorage.setItem('npoint_week', currentWeek);
                         }
 
-                        localStorage.setItem('noconfig_accounts', JSON.stringify(accountsData));
+                        localStorage.setItem('npoint_accounts', JSON.stringify(accountsData));
                         renderTable();
                         statusEl.innerText = "CLOUD: SYNCED ✅";
                     }
@@ -237,17 +233,14 @@
             }
         }
 
-        // Tự động đẩy dữ liệu lên đám mây khi có thay đổi
+        // Tự động đẩy dữ liệu lên Cloud
         async function pushToCloud() {
             const statusEl = document.getElementById('syncStatus');
             statusEl.innerText = "SAVING...";
             try {
-                const res = await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Access-Master-Key': '$2a$10$7v2u8QvF1Y7U8H5V3Z1X5e3r2t1y0u9i8o7p6a5s4d3f2g1h0j9k8'
-                    },
+                const res = await fetch(CLOUD_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(accountsData)
                 });
                 if (res.ok) {
@@ -262,7 +255,7 @@
         }
 
         function saveAndSync() {
-            localStorage.setItem('noconfig_accounts', JSON.stringify(accountsData));
+            localStorage.setItem('npoint_accounts', JSON.stringify(accountsData));
             pushToCloud();
         }
 
@@ -388,8 +381,8 @@
 
         function resetData() {
             if (confirm('Bạn có muốn khôi phục lại dữ liệu mặc định không?')) {
-                localStorage.removeItem('noconfig_accounts');
-                localStorage.removeItem('noconfig_week');
+                localStorage.removeItem('npoint_accounts');
+                localStorage.removeItem('npoint_week');
                 location.reload();
             }
         }
