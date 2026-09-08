@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Sheets Live Sync</title>
+    <title>Gaming Account Manager - Split Columns</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -43,7 +43,7 @@
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
             <div>
                 <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400">⚡ GAMING // SHEETS SYNC</h1>
-                <p class="text-xs text-slate-400 mt-1">Đồng bộ trực tiếp 2 chiều với file Google Sheets cá nhân</p>
+                <p class="text-xs text-slate-400 mt-1">Quản lý Tài khoản & Mật khẩu riêng biệt - Đồng bộ thời gian thực</p>
             </div>
             <div class="flex items-center space-x-3">
                 <button onclick="fetchSheetData()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-4 py-2 rounded text-xs font-bold cursor-pointer">📥 TẢI LẠI</button>
@@ -60,7 +60,8 @@
                 <thead>
                     <tr class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800 uppercase">
                         <th class="p-3 w-12 text-slate-500">STT</th>
-                        <th class="p-3 text-left">ACC (TÀI KHOẢN & MẬT KHẨU)</th>
+                        <th class="p-3 text-left">TÀI KHOẢN (USERNAME)</th>
+                        <th class="p-3 text-left">MẬT KHẨU (PASSWORD)</th>
                         <th class="p-3">THỨ 2</th>
                         <th class="p-3">THỨ 3</th>
                         <th class="p-3">THỨ 4</th>
@@ -81,7 +82,6 @@
     </div>
 
     <script>
-        // Đường dẫn Web App mới nhất của bạn
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ_wv_kwlTxqZC2AXvuC44hcWdcjVB_otmFFteyY6vA2ME-PDiEeYT_bXvwtZu94Gb/exec";
 
         let accounts = [];
@@ -123,7 +123,10 @@
                 let rowHtml = `<tr class="hover:bg-slate-800/40">
                     <td class="p-3 text-xs text-slate-500">${index + 1}</td>
                     <td class="p-2 text-left">
-                        <input type="text" value="${item.acc || ''}" oninput="accounts[${index}].acc = this.value; saveToSheet();" class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
+                        <input type="text" value="${item.username || ''}" oninput="accounts[${index}].username = this.value; saveToSheet();" class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
+                    </td>
+                    <td class="p-2 text-left">
+                        <input type="text" value="${item.password || ''}" oninput="accounts[${index}].password = this.value; saveToSheet();" class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
                     </td>`;
 
                 ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'].forEach(day => {
@@ -147,7 +150,8 @@
         function addNewRow() {
             accounts.push({
                 stt: accounts.length + 1,
-                acc: "tentaikhoan@gmail.com\nmatkhau",
+                username: "",
+                password: "",
                 thu2: false, thu3: false, thu4: false, thu5: false, thu6: false, thu7: false, cn: false, cua: false,
                 note: ""
             });
