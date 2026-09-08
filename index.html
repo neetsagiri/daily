@@ -8,35 +8,35 @@
     <style>
         @keyframes rgb7ColorsBox {
             0% {
-                border-color: rgba(239, 68, 68, 0.8); /* Đỏ */
+                border-color: rgba(239, 68, 68, 0.8);
                 box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2);
             }
             14% {
-                border-color: rgba(249, 115, 22, 0.8); /* Cam */
+                border-color: rgba(249, 115, 22, 0.8);
                 box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), inset 0 0 15px rgba(249, 115, 22, 0.2);
             }
             28% {
-                border-color: rgba(234, 179, 8, 0.8); /* Vàng */
+                border-color: rgba(234, 179, 8, 0.8);
                 box-shadow: 0 0 20px rgba(234, 179, 8, 0.4), inset 0 0 15px rgba(234, 179, 8, 0.2);
             }
             42% {
-                border-color: rgba(34, 197, 94, 0.8); /* Lục */
+                border-color: rgba(34, 197, 94, 0.8);
                 box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), inset 0 0 15px rgba(34, 197, 94, 0.2);
             }
             57% {
-                border-color: rgba(6, 182, 212, 0.8); /* Lam */
+                border-color: rgba(6, 182, 212, 0.8);
                 box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.2);
             }
             71% {
-                border-color: rgba(59, 130, 246, 0.8); /* Chàm */
+                border-color: rgba(59, 130, 246, 0.8);
                 box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.2);
             }
             85% {
-                border-color: rgba(168, 85, 247, 0.8); /* Tím */
+                border-color: rgba(168, 85, 247, 0.8);
                 box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.2);
             }
             100% {
-                border-color: rgba(239, 68, 68, 0.8); /* Quay lại Đỏ */
+                border-color: rgba(239, 68, 68, 0.8);
                 box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2);
             }
         }
@@ -52,6 +52,17 @@
             100% { color: #ef4444; text-shadow: 0 0 10px rgba(239,68,68,0.7); }
         }
 
+        @keyframes rgbBorderAnim {
+            0% { border-color: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+            14% { border-color: #f97316; box-shadow: 0 0 10px rgba(249,115,22,0.5); }
+            28% { border-color: #eab308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
+            42% { border-color: #22c55e; box-shadow: 0 0 10px rgba(34,197,94,0.5); }
+            57% { border-color: #06b6d4; box-shadow: 0 0 10px rgba(6,182,212,0.5); }
+            71% { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59,130,246,0.5); }
+            85% { border-color: #a855f7; box-shadow: 0 0 10px rgba(168,85,247,0.5); }
+            100% { border-color: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+        }
+
         .neon-box {
             border: 2px solid;
             animation: rgb7ColorsBox 12s infinite linear;
@@ -61,16 +72,65 @@
             animation: rgb7ColorsText 12s infinite linear;
         }
 
-        .neon-button {
+        .neon-rgb-btn {
+            border: 2px solid;
+            background-color: rgba(15, 23, 42, 0.9);
+            animation: rgbBorderAnim 12s infinite linear;
             transition: all 0.3s ease;
         }
-        .neon-button:hover {
-            filter: brightness(1.2);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        .neon-rgb-btn:hover {
+            filter: brightness(1.3);
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
         }
+
+        /* Cải thiện trực quan ô tích (Checkbox Gaming) */
+        .gaming-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.4rem;
+            height: 1.4rem;
+            background-color: #020617;
+            border: 2px solid #334155;
+            border-radius: 0.35rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease-in-out;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+        }
+
+        .gaming-checkbox:hover {
+            border-color: #06b6d4;
+            box-shadow: 0 0 8px rgba(6,182,212,0.6), inset 0 0 5px rgba(0,0,0,0.8);
+        }
+
+        .gaming-checkbox:checked {
+            background: linear-gradient(135deg, #06b6d4, #a855f7);
+            border-color: #38bdf8;
+            box-shadow: 0 0 12px rgba(6,182,212,0.8), 0 0 20px rgba(168,85,247,0.5);
+        }
+
+        .gaming-checkbox:checked::after {
+            content: '✔';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #020617;
+            font-size: 0.85rem;
+            font-weight: 900;
+        }
+
+        /* Checkbox Weekly riêng màu tím/hồng nổi bật */
+        .gaming-checkbox.weekly-check:checked {
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            border-color: #f472b6;
+            box-shadow: 0 0 12px rgba(236,72,153,0.8), 0 0 20px rgba(168,85,247,0.5);
+        }
+
         .neon-input:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+            border-color: #06b6d4;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
         }
     </style>
 </head>
@@ -87,10 +147,10 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <button onclick="openAddModal()" class="bg-gradient-to-r from-red-500 via-green-500 to-purple-500 text-slate-950 font-bold px-4 py-2 rounded text-sm neon-button flex items-center space-x-1 cursor-pointer">
+                <button onclick="openAddModal()" class="neon-rgb-btn font-bold px-4 py-2 rounded text-sm neon-title flex items-center space-x-1 cursor-pointer">
                     <span class="text-lg leading-none">+</span> <span>THÊM ACC</span>
                 </button>
-                <button onclick="resetData()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2 rounded text-sm neon-button cursor-pointer">
+                <button onclick="resetData()" class="neon-rgb-btn font-bold px-4 py-2 rounded text-sm neon-title cursor-pointer">
                     LÀM MỚI
                 </button>
             </div>
@@ -99,10 +159,10 @@
         <!-- Thanh công cụ -->
         <div class="flex justify-between items-center mb-6 bg-slate-950/80 p-3 rounded-lg border border-slate-800 shadow-inner">
             <label class="flex items-center space-x-3 cursor-pointer select-none">
-                <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="w-4 h-4 bg-slate-900 border-slate-700 text-cyan-500 rounded focus:ring-0 cursor-pointer">
+                <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="gaming-checkbox">
                 <span class="text-xs font-semibold text-slate-300 tracking-wide uppercase">Ẩn các ngày đã xong trong tuần</span>
             </label>
-            <span class="text-xs neon-title font-bold">STATUS: 7_COLORS_RGB_ACTIVE</span>
+            <span class="text-xs neon-title font-bold">STATUS: RGB_7COLORS_ACTIVE</span>
         </div>
 
         <!-- Form thêm tài khoản -->
@@ -218,7 +278,7 @@
                         <td class="p-2 day-cell" data-day="${day}" ${displayStyle}>
                             <input type="checkbox" ${isChecked ? 'checked' : ''} 
                                 onchange="updateStatus(${index}, '${day}', this.checked)"
-                                class="w-5 h-5 bg-slate-950 border-slate-700 text-cyan-500 rounded cursor-pointer accent-cyan-500 shadow-sm">
+                                class="gaming-checkbox">
                         </td>
                     `;
                 });
@@ -228,7 +288,7 @@
                         <div class="flex items-center space-x-2">
                             <input type="checkbox" ${acc.weekly.checked ? 'checked' : ''} 
                                 onchange="updateWeeklyCheck(${index}, this.checked)"
-                                class="w-5 h-5 bg-slate-950 border-slate-700 text-purple-500 rounded cursor-pointer accent-purple-500 shadow-sm" title="Weekly Check">
+                                class="gaming-checkbox weekly-check" title="Weekly Check">
                             <input type="text" value="${acc.weekly.note || ''}" 
                                 onchange="updateWeeklyNote(${index}, this.value)"
                                 placeholder="Ghi chú weekly..." 
