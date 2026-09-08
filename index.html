@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Instant Checkbox Sync</title>
+    <title>Gaming Account Manager - Live Status</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -89,6 +89,16 @@
             color: #34d399;
         }
 
+        /* Hiệu ứng nhấp nháy cho đèn trạng thái */
+        @keyframes pulseGlow {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 8px currentColor; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .status-dot {
+            animation: pulseGlow 1.5s infinite;
+        }
+
         #toast-container {
             position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;
         }
@@ -135,14 +145,20 @@
     </div>
 
     <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-4 md:p-6 shadow-2xl">
-        <!-- Header & Thống kê -->
-        <div class="flex justify-between items-center mb-5 pb-4 border-b border-slate-800">
+        <!-- Header & Thống kê tích hợp Đèn Trạng Thái -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 pb-4 border-b border-slate-800 gap-3">
             <div>
-                <h1 class="text-xl md:text-2xl font-extrabold tracking-wider uppercase text-cyan-400 flex items-center gap-2">
+                <h1 class="text-xl md:text-2xl font-extrabold tracking-wider uppercase text-cyan-400 flex items-center gap-2 flex-wrap">
                     ⚡ GAMING 
                     <span id="accountCount" class="text-xs font-bold bg-slate-800 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-500/30">0 tài khoản</span>
+                    
+                    <!-- ĐÈN TRẠNG THÁI KẾT NỐI -->
+                    <div id="syncStatusBadge" class="flex items-center gap-1.5 bg-slate-950/80 px-2.5 py-1 rounded-full border border-slate-800 text-[11px] font-medium ml-auto md:ml-2">
+                        <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 status-dot"></span>
+                        <span id="statusText" class="text-slate-300">Đã lưu xong</span>
+                    </div>
                 </h1>
-                <p class="text-xs font-medium text-slate-400 mt-1">Quản lý tài khoản game</p>
+                <p class="text-xs font-medium text-slate-400 mt-1">Quản lý tài khoản game đồng bộ Sheets</p>
             </div>
             <div>
                 <button onclick="openModal()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2.5 rounded-lg text-xs cursor-pointer shadow-lg shadow-cyan-500/20 transition-all">+ THÊM DÒNG</button>
@@ -172,6 +188,26 @@
         let accounts = [];
         let isMobileView = window.innerWidth < 768;
         let syncTimer = null;
+
+        // Cập nhật giao diện Đèn trạng thái trực quan
+        function setSyncStatus(status) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            
+            if (status === 'syncing') {
+                dot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 status-dot";
+                text.innerText = "Đang đồng bộ...";
+                text.className = "text-amber-300";
+            } else if (status === 'saved') {
+                dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 status-dot";
+                text.innerText = "Đã lưu xong";
+                text.className = "text-slate-300";
+            } else if (status === 'error') {
+                dot.className = "w-2.5 h-2.5 rounded-full bg-red-500 status-dot";
+                text.innerText = "Lỗi đồng bộ";
+                text.className = "text-red-300";
+            }
+        }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -239,16 +275,18 @@
             }
         }
 
-        // Đồng bộ ngầm thông minh cho ô nhập chữ (chờ 600ms sau khi ngừng gõ)
+        // Đồng bộ ngầm thông minh cho ô nhập chữ
         function triggerAutoSync() {
+            setSyncStatus('syncing');
             clearTimeout(syncTimer);
             syncTimer = setTimeout(async () => {
                 executeSync();
             }, 600);
         }
 
-        // Đồng bộ lập tức không độ trễ (dành riêng cho checkbox và thêm/xóa dòng)
+        // Đồng bộ lập tức không độ trễ
         async function executeSync() {
+            setSyncStatus('syncing');
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -256,9 +294,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(accounts)
                 });
-                showToast("💾 Đã lưu", "success");
+                setSyncStatus('saved');
             } catch (err) {
                 console.error(err);
+                setSyncStatus('error');
                 showToast("❌ Đồng bộ thất bại!", "error");
             }
         }
@@ -294,7 +333,7 @@
 
             closeModal();
             renderUI();
-            executeSync(); // Lưu ngay lập tức
+            executeSync();
             showToast("✨ Đã thêm tài khoản mới!", "success");
         }
 
@@ -347,7 +386,6 @@
                     const days = ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'];
                     days.forEach(day => {
                         let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
-                        // Tích chọn checkbox sẽ gọi executeSync() đồng bộ NGAY LẬP TỨC
                         tableHtml += `<td class="p-2.5 text-center"><input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; updateProgress(); executeSync();" class="gaming-checkbox"></td>`;
                     });
 
@@ -375,7 +413,6 @@
                     
                     days.forEach(day => {
                         let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
-                        // Tích chọn checkbox trên mobile gọi executeSync() NGAY LẬP TỨC
                         daysHtml += `
                             <div class="flex flex-col items-center bg-slate-900 p-1.5 rounded-lg border border-slate-800">
                                 <span class="text-[11px] text-slate-400 mb-1 font-bold">${dayLabels[day]}</span>
