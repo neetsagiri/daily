@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Sheets Live Sync</title>
+    <title>Gaming Account Manager - Auto Sheets Sync</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -149,7 +149,7 @@
                     </td>`;
 
                 ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'].forEach(day => {
-                    let checked = (item[day] === true || item[day] === "TRUE" || item[day] === true) ? 'checked' : '';
+                    let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
                     rowHtml += `<td class="p-2 text-center">
                         <input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; saveToSheet();" class="gaming-checkbox">
                     </td>`;
