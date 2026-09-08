@@ -148,7 +148,9 @@
                             class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
                     </td>`;
 
-                ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'].forEach(day => {
+                // Khớp chính xác thứ tự cột ngày tháng từ D (thu2) đến K (cua)
+                const days = ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'];
+                days.forEach(day => {
                     let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
                     rowHtml += `<td class="p-2 text-center">
                         <input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; saveToSheet();" class="gaming-checkbox">
