@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Modal Edition</title>
+    <title>Gaming Account Manager - Pro Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -42,6 +42,31 @@
             background: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; color: #cbd5e1; padding: 6px 10px; border-radius: 6px; width: 100%; font-size: 13px;
         }
         .sheets-cell:focus { border-color: #06b6d4; background: rgba(15, 23, 42, 0.95); outline: none; }
+
+        /* Nút copy đẹp mắt, hiệu ứng mượt */
+        .copy-btn {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .copy-btn:hover {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: #06b6d4;
+            color: #38bdf8;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+        }
+        .copy-btn.copied {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+            color: #34d399;
+        }
 
         #toast-container {
             position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;
@@ -136,10 +161,25 @@
             setTimeout(() => toast.remove(), 2500);
         }
 
-        function copyToClipboard(text, label) {
-            if (!text) return;
+        // Cải thiện hàm sao chép trực tiếp từ giá trị thực của dòng dữ liệu
+        function copyText(text, label, btnElement) {
+            if (!text) {
+                showToast(`⚠️ Không có ${label} để sao chép!`, 'error');
+                return;
+            }
             navigator.clipboard.writeText(text).then(() => {
-                showToast(`📋 Đã sao chép ${label}`, 'success');
+                showToast(`📋 Đã sao chép ${label}: ${text}`, 'success');
+                
+                // Hiệu ứng đổi màu nút khi copy thành công
+                if (btnElement) {
+                    let originalHTML = btnElement.innerHTML;
+                    btnElement.innerHTML = '✓';
+                    btnElement.classList.add('copied');
+                    setTimeout(() => {
+                        btnElement.innerHTML = originalHTML;
+                        btnElement.classList.remove('copied');
+                    }, 1500);
+                }
             }).catch(err => {
                 showToast(`❌ Lỗi sao chép!`, 'error');
             });
@@ -257,18 +297,21 @@
                             <tbody class="divide-y divide-slate-800/50">`;
 
                 accounts.forEach((item, index) => {
+                    let safeUser = (item.username || '').replace(/'/g, "\\'");
+                    let safePass = (item.password || '').replace(/'/g, "\\'");
+
                     tableHtml += `<tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="p-3 text-xs text-slate-500">${index + 1}</td>
                         <td class="p-2 text-left">
                             <div class="flex items-center gap-1.5">
                                 <input type="text" value="${item.username || ''}" oninput="accounts[${index}].username = this.value;" onblur="saveToSheet()" class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
-                                <button onclick="copyToClipboard('${item.username || ''}', 'Tài khoản')" class="text-slate-500 hover:text-cyan-400 p-1 text-xs">📋</button>
+                                <button onclick="copyText('${safeUser}', 'Tài khoản', this)" class="copy-btn" title="Sao chép">📋</button>
                             </div>
                         </td>
                         <td class="p-2 text-left">
                             <div class="flex items-center gap-1.5">
                                 <input type="text" value="${item.password || ''}" oninput="accounts[${index}].password = this.value;" onblur="saveToSheet()" class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
-                                <button onclick="copyToClipboard('${item.password || ''}', 'Mật khẩu')" class="text-slate-500 hover:text-amber-400 p-1 text-xs">📋</button>
+                                <button onclick="copyText('${safePass}', 'Mật khẩu', this)" class="copy-btn" title="Sao chép">📋</button>
                             </div>
                         </td>`;
 
@@ -290,6 +333,9 @@
                 container.innerHTML = tableHtml;
             } else {
                 accounts.forEach((item, index) => {
+                    let safeUser = (item.username || '').replace(/'/g, "\\'");
+                    let safePass = (item.password || '').replace(/'/g, "\\'");
+
                     let card = document.createElement('div');
                     card.className = "bg-slate-950/80 border border-slate-800 rounded-lg p-3 space-y-2.5 relative";
                     
@@ -314,16 +360,16 @@
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="text-[10px] text-slate-400 block mb-1">Tài khoản</label>
-                                <div class="flex items-center gap-1">
+                                <div class="flex items-center gap-1.5">
                                     <input type="text" value="${item.username || ''}" oninput="accounts[${index}].username = this.value;" onblur="saveToSheet()" class="sheets-cell text-cyan-300 font-bold" placeholder="User...">
-                                    <button onclick="copyToClipboard('${item.username || ''}', 'Tài khoản')" class="text-slate-500 hover:text-cyan-400 text-xs p-1">📋</button>
+                                    <button onclick="copyText('${safeUser}', 'Tài khoản', this)" class="copy-btn text-xs px-2 py-1">📋 Copy</button>
                                 </div>
                             </div>
                             <div>
                                 <label class="text-[10px] text-slate-400 block mb-1">Mật khẩu</label>
-                                <div class="flex items-center gap-1">
+                                <div class="flex items-center gap-1.5">
                                     <input type="text" value="${item.password || ''}" oninput="accounts[${index}].password = this.value;" onblur="saveToSheet()" class="sheets-cell text-amber-300" placeholder="Pass...">
-                                    <button onclick="copyToClipboard('${item.password || ''}', 'Mật khẩu')" class="text-slate-500 hover:text-amber-400 text-xs p-1">📋</button>
+                                    <button onclick="copyText('${safePass}', 'Mật khẩu', this)" class="copy-btn text-xs px-2 py-1">📋 Copy</button>
                                 </div>
                             </div>
                         </div>
