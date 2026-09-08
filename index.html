@@ -16,13 +16,20 @@
             background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
 
-        @keyframes rgb7ColorsBox {
-            0% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
-            50% { border-color: rgba(6, 182, 212, 0.7); box-shadow: 0 0 25px rgba(6, 182, 212, 0.3); }
-            100% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
+        /* Hiệu ứng viền Neon đổi màu liên tục mượt mà */
+        @keyframes rgbNeonCycle {
+            0% { border-color: #ff2a6d; box-shadow: 0 0 30px rgba(255, 42, 109, 0.4); }
+            33% { border-color: #05d9e8; box-shadow: 0 0 30px rgba(5, 217, 232, 0.4); }
+            66% { border-color: #7928ca; box-shadow: 0 0 30px rgba(121, 40, 202, 0.4); }
+            100% { border-color: #ff2a6d; box-shadow: 0 0 30px rgba(255, 42, 109, 0.4); }
         }
 
-        .neon-box { border: 2px solid; animation: rgb7ColorsBox 10s infinite linear; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(12px); }
+        .neon-box { 
+            border: 2px solid; 
+            animation: rgbNeonCycle 8s infinite linear; 
+            background: rgba(13, 17, 23, 0.9); 
+            backdrop-filter: blur(12px); 
+        }
         
         .gaming-checkbox {
             appearance: none; -webkit-appearance: none; width: 1.4rem; height: 1.4rem;
@@ -43,16 +50,15 @@
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
             <div>
                 <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400">⚡ GAMING // AUTO-SHEETS SYNC</h1>
-                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động làm mới ngầm</p>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động làm mới mỗi 1 giây</p>
             </div>
-            <div class="flex items-center space-x-3">
-                <button onclick="fetchSheetData(false)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-4 py-2 rounded text-xs font-bold cursor-pointer">📥 TẢI LẠI</button>
+            <div>
                 <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer">+ THÊM DÒNG</button>
             </div>
         </div>
 
         <div class="flex justify-between items-center mb-4 bg-slate-950/70 p-3 rounded-lg border border-slate-800">
-            <span id="syncStatus" class="text-xs text-emerald-400 font-bold">STATUS: ĐÃ KẾT NỐI GOOGLE SHEETS</span>
+            <span id="syncStatus" class="text-xs text-emerald-400 font-bold">STATUS: ĐANG CHẠY NGẦM TỰ ĐỘNG (1S) 🟢</span>
         </div>
 
         <div class="overflow-x-auto rounded-xl border border-slate-800">
@@ -88,11 +94,8 @@
         let isEditing = false;
 
         async function fetchSheetData(isAuto = false) {
+            // Nếu người dùng đang gõ phím hoặc tích chọn, tạm dừng fetch ngầm để không bị reset con trỏ
             if (isAuto && isEditing) return;
-
-            if (!isAuto) {
-                document.getElementById('syncStatus').innerText = "STATUS: ĐANG TẢI DỮ LIỆU TỪ GOOGLE SHEETS...";
-            }
 
             try {
                 let res = await fetch(SCRIPT_URL);
@@ -103,11 +106,11 @@
                     renderTable();
                 }
 
-                document.getElementById('syncStatus').innerText = "STATUS: AUTO-SYNC ĐANG CHẠY 🟢";
+                document.getElementById('syncStatus').innerText = "STATUS: ĐANG CHẠY NGẦM TỰ ĐỘNG (1S) 🟢";
             } catch (err) {
                 console.error(err);
                 if (!isAuto) {
-                    document.getElementById('syncStatus').innerText = "STATUS: LỖI KHI TẢI DỮ LIỆU! ❌";
+                    document.getElementById('syncStatus').innerText = "STATUS: LỖI KẾT NỐI NGẦM ❌";
                 }
             }
         }
@@ -182,11 +185,13 @@
             saveToSheet();
         }
 
+        // Tải dữ liệu lần đầu ngay khi mở trang
         fetchSheetData(false);
 
+        // Vòng lặp chạy ngầm tự động làm mới mỗi 1 giây (1000ms)
         setInterval(() => {
             fetchSheetData(true);
-        }, 7000);
+        }, 1000);
     </script>
 </body>
 </html>
