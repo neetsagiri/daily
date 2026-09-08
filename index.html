@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Cloud Sheets</title>
+    <title>Gaming Account Manager - Google Sheets Sync</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -17,382 +17,161 @@
         }
 
         @keyframes rgb7ColorsBox {
-            0% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.15); }
-            14% { border-color: rgba(249, 115, 22, 0.7); box-shadow: 0 0 25px rgba(249, 115, 22, 0.3), inset 0 0 15px rgba(249, 115, 22, 0.15); }
-            28% { border-color: rgba(234, 179, 8, 0.7); box-shadow: 0 0 25px rgba(234, 179, 8, 0.3), inset 0 0 15px rgba(234, 179, 8, 0.15); }
-            42% { border-color: rgba(34, 197, 94, 0.7); box-shadow: 0 0 25px rgba(34, 197, 94, 0.3), inset 0 0 15px rgba(34, 197, 94, 0.15); }
-            57% { border-color: rgba(6, 182, 212, 0.7); box-shadow: 0 0 25px rgba(6, 182, 212, 0.3), inset 0 0 15px rgba(6, 182, 212, 0.15); }
-            71% { border-color: rgba(59, 130, 246, 0.7); box-shadow: 0 0 25px rgba(59, 130, 246, 0.3), inset 0 0 15px rgba(59, 130, 246, 0.15); }
-            85% { border-color: rgba(168, 85, 247, 0.7); box-shadow: 0 0 25px rgba(168, 85, 247, 0.3), inset 0 0 15px rgba(168, 85, 247, 0.15); }
-            100% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.15); }
+            0% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
+            50% { border-color: rgba(6, 182, 212, 0.7); box-shadow: 0 0 25px rgba(6, 182, 212, 0.3); }
+            100% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
         }
 
-        @keyframes rgb7ColorsText {
-            0% { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.6); }
-            14% { color: #f97316; text-shadow: 0 0 12px rgba(249,115,22,0.6); }
-            28% { color: #eab308; text-shadow: 0 0 12px rgba(234,179,8,0.6); }
-            42% { color: #22c55e; text-shadow: 0 0 12px rgba(34,197,94,0.6); }
-            57% { color: #06b6d4; text-shadow: 0 0 12px rgba(6,182,212,0.6); }
-            71% { color: #3b82f6; text-shadow: 0 0 12px rgba(59,130,246,0.6); }
-            85% { color: #a855f7; text-shadow: 0 0 12px rgba(168,85,247,0.6); }
-            100% { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.6); }
-        }
-
-        @keyframes rgbBorderAnim {
-            0% { border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.4); }
-            14% { border-color: #f97316; box-shadow: 0 0 12px rgba(249,115,22,0.4); }
-            28% { border-color: #eab308; box-shadow: 0 0 12px rgba(234,179,8,0.4); }
-            42% { border-color: #22c55e; box-shadow: 0 0 12px rgba(34,197,94,0.4); }
-            57% { border-color: #06b6d4; box-shadow: 0 0 12px rgba(6,182,212,0.4); }
-            71% { border-color: #3b82f6; box-shadow: 0 0 12px rgba(59,130,246,0.4); }
-            85% { border-color: #a855f7; box-shadow: 0 0 12px rgba(168,85,247,0.4); }
-            100% { border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.4); }
-        }
-
-        .neon-box { 
-            border: 2px solid; 
-            animation: rgb7ColorsBox 12s infinite linear; 
-            background: rgba(13, 17, 23, 0.85);
-            backdrop-filter: blur(12px);
-        }
-
-        .neon-title { animation: rgb7ColorsText 12s infinite linear; }
+        .neon-box { border: 2px solid; animation: rgb7ColorsBox 10s infinite linear; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(12px); }
         
-        .neon-rgb-btn { 
-            border: 2px solid; 
-            background-color: rgba(3, 7, 18, 0.8); 
-            animation: rgbBorderAnim 12s infinite linear; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        .neon-rgb-btn:hover { 
-            filter: brightness(1.4); 
-            transform: translateY(-2px) scale(1.02); 
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); 
-        }
-
         .gaming-checkbox {
             appearance: none; -webkit-appearance: none; width: 1.4rem; height: 1.4rem;
             background-color: #0b0f19; border: 2px solid #374151; border-radius: 0.3rem;
-            cursor: pointer; position: relative; transition: all 0.2s ease-in-out; box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);
+            cursor: pointer; position: relative; transition: all 0.2s ease-in-out;
         }
-        .gaming-checkbox:hover { border-color: #06b6d4; box-shadow: 0 0 10px rgba(6,182,212,0.6); }
-        .gaming-checkbox:checked { background: linear-gradient(135deg, #06b6d4, #a855f7); border-color: #38bdf8; box-shadow: 0 0 14px rgba(6,182,212,0.8); }
+        .gaming-checkbox:checked { background: linear-gradient(135deg, #06b6d4, #a855f7); border-color: #38bdf8; box-shadow: 0 0 10px rgba(6,182,212,0.8); }
         .gaming-checkbox:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #030712; font-size: 0.85rem; font-weight: 900; }
-        .gaming-checkbox.weekly-check:checked { background: linear-gradient(135deg, #ec4899, #8b5cf6); border-color: #f472b6; }
 
         .sheets-cell {
-            background: transparent;
-            border: 1px solid transparent;
-            color: #cbd5e1;
-            padding: 6px 10px;
-            border-radius: 4px;
-            width: 100%;
-            font-size: 13px;
-            transition: all 0.2s;
+            background: transparent; border: 1px solid transparent; color: #cbd5e1; padding: 6px 10px; border-radius: 4px; width: 100%; font-size: 13px;
         }
-        .sheets-cell:hover {
-            border-color: rgba(6, 182, 212, 0.4);
-            background: rgba(30, 41, 59, 0.3);
-        }
-        .sheets-cell:focus {
-            border-color: #06b6d4;
-            background: rgba(15, 23, 42, 0.95);
-            box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
-            outline: none;
-        }
-
-        .cyber-row:hover { background-color: rgba(30, 41, 59, 0.4); }
+        .sheets-cell:focus { border-color: #06b6d4; background: rgba(15, 23, 42, 0.95); outline: none; }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen p-4 md:p-8 font-mono">
-    <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
-        
-        <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-5 border-b border-slate-800 gap-4 relative z-10">
+    <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-6 shadow-2xl">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
             <div>
-                <div class="flex items-center space-x-2 mb-1">
-                    <span class="inline-block w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
-                    <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">Stable Cloud Sync Active</span>
-                </div>
-                <h1 class="text-2xl md:text-3xl font-black tracking-wider uppercase neon-title">
-                    ⚡ GAMING // CLOUD_SHEETS
-                </h1>
-                <p class="text-xs text-slate-400 mt-1">Chỉnh sửa trực tiếp trên ô + Tự động lưu trữ thời gian thực đa thiết bị</p>
+                <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400">⚡ GOOGLE SHEETS // SYNC CORE</h1>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ trực tiếp với file Google Trang Tính của bạn</p>
             </div>
-            
-            <div class="flex items-center space-x-3 flex-wrap gap-2">
-                <button onclick="addNewRow()" class="neon-rgb-btn font-bold px-5 py-2.5 rounded-xl text-sm neon-title cursor-pointer flex items-center space-x-1 shadow-lg">
-                    <span class="text-lg leading-none">+</span> <span>THÊM DÒNG MỚI</span>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Thanh công cụ -->
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-slate-950/70 p-4 rounded-xl border border-slate-800/80 shadow-inner gap-3 relative z-10 backdrop-blur-md">
-            <label class="flex items-center space-x-3 cursor-pointer select-none group">
-                <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="gaming-checkbox">
-                <span class="text-xs font-semibold text-slate-300 group-hover:text-cyan-300 transition-colors tracking-wide uppercase">Ẩn các ngày đã xong trong tuần</span>
-            </label>
-            <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
-                <span id="syncDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="syncStatus" class="text-xs neon-title font-bold tracking-wider">CLOUD: CONNECTED</span>
+            <div class="flex items-center space-x-3">
+                <button onclick="fetchSheetData()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-4 py-2 rounded text-xs font-bold cursor-pointer">📥 TẢI LẠI</button>
+                <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer">+ THÊM DÒNG</button>
             </div>
         </div>
 
-        <!-- Bảng Google Sheets Grid -->
-        <div class="overflow-x-auto rounded-xl border border-slate-800/80 shadow-2xl relative z-10">
+        <div class="flex justify-between items-center mb-4 bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+            <span id="syncStatus" class="text-xs text-emerald-400 font-bold">STATUS: ĐÃ KẾT NỐI GOOGLE SHEETS</span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
             <table class="w-full border-collapse text-center text-sm">
                 <thead>
-                    <tr class="bg-slate-950/90 text-slate-300 text-xs border-b border-slate-800 uppercase tracking-wider">
-                        <th class="p-3 w-12 text-center text-slate-500 font-normal">#</th>
-                        <th class="p-4 text-left font-bold text-cyan-400">TÀI KHOẢN (USERNAME)</th>
-                        <th class="p-4 text-left font-bold text-cyan-400">MẬT KHẨU (PASSWORD)</th>
-                        <th class="p-3 th-day" data-day="mon">THỨ 2</th>
-                        <th class="p-3 th-day" data-day="tue">THỨ 3</th>
-                        <th class="p-3 th-day" data-day="wed">THỨ 4</th>
-                        <th class="p-3 th-day" data-day="thu">THỨ 5</th>
-                        <th class="p-3 th-day" data-day="fri">THỨ 6</th>
-                        <th class="p-3 th-day" data-day="sat">THỨ 7</th>
-                        <th class="p-3 th-day" data-day="sun">CHỦ NHẬT</th>
-                        <th class="p-4 text-left pl-6 font-bold text-purple-400">WEEKLY NOTE & CHECK</th>
-                        <th class="p-3 text-center text-slate-500">XÓA</th>
+                    <tr class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800 uppercase">
+                        <th class="p-3 w-12 text-slate-500">STT</th>
+                        <th class="p-3 text-left">ACC (TÀI KHOẢN & MẬT KHẨU)</th>
+                        <th class="p-3">THỨ 2</th>
+                        <th class="p-3">THỨ 3</th>
+                        <th class="p-3">THỨ 4</th>
+                        <th class="p-3">THỨ 5</th>
+                        <th class="p-3">THỨ 6</th>
+                        <th class="p-3">THỨ 7</th>
+                        <th class="p-3">CHỦ NHẬT</th>
+                        <th class="p-3">CỬA TUẦN</th>
+                        <th class="p-3 text-left pl-4">GHI CHÚ</th>
+                        <th class="p-3">XÓA</th>
                     </tr>
                 </thead>
-                <tbody id="account-table-body" class="divide-y divide-slate-800/50 bg-slate-900/40">
-                    <!-- Dữ liệu render bằng JS -->
+                <tbody id="table-body" class="divide-y divide-slate-800/50">
+                    <!-- Dữ liệu load từ Sheets -->
                 </tbody>
             </table>
         </div>
-
-        <!-- Footer Info -->
-        <div class="mt-6 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2 relative z-10">
-            <span>🛡️ Tự động lưu & đồng bộ thời gian thực mượt mà. Reset Daily vào Thứ Hai hàng tuần.</span>
-            <button onclick="resetData()" class="text-red-400 hover:text-red-300 font-bold transition-colors cursor-pointer bg-red-950/30 px-3 py-1 rounded border border-red-500/20">
-                ⚠️ Khôi phục dữ liệu gốc
-            </button>
-        </div>
-
     </div>
 
     <script>
-        // Sử dụng dịch vụ cloud storage ổn định qua npoint.io (cho phép đọc/ghi trực tiếp không cần cấu hình)
-        const CLOUD_URL = "https://api.npoint.io/4621c38575971db3f0ea";
+        // Đường dẫn Web App từ Google Apps Script của bạn:
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpFKo_PksjkJC_nc6ZXi3ikjm3e-4MPwWpGna5hY3WwNoP0e8f4i0eznny2azw850/exec";
 
-        function getWeekNumber(d) {
-            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-            var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
-            return d.getUTCFullYear() + '-W' + weekNo;
-        }
+        let sheetData = [];
 
-        let accountsData = JSON.parse(localStorage.getItem('npoint_accounts')) || [
-            {
-                id: 1,
-                username: "user_01",
-                password: "password_123",
-                days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
-                weekly: { checked: false, note: "Điểm danh tuần" }
-            }
-        ];
-
-        let hideCompleted = false;
-        const daysList = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
-        // Tự động tải dữ liệu từ Cloud
-        async function fetchFromCloud() {
-            const statusEl = document.getElementById('syncStatus');
-            statusEl.innerText = "SYNCING...";
+        async function fetchSheetData() {
+            document.getElementById('syncStatus').innerText = "STATUS: ĐANG TẢI DỮ LIỆU TỪ GOOGLE SHEETS...";
             try {
-                const res = await fetch(CLOUD_URL, { cache: "no-store" });
-                if (res.ok) {
-                    const json = await res.json();
-                    if (Array.isArray(json) && json.length > 0) {
-                        accountsData = json;
-                        
-                        let currentWeek = getWeekNumber(new Date());
-                        let savedWeek = localStorage.getItem('npoint_week');
-                        if (savedWeek !== currentWeek) {
-                            accountsData.forEach(acc => {
-                                if (acc.days) Object.keys(acc.days).forEach(day => acc.days[day] = false);
-                                if (acc.weekly) acc.weekly.checked = false;
-                            });
-                            localStorage.setItem('npoint_week', currentWeek);
-                        }
-
-                        localStorage.setItem('npoint_accounts', JSON.stringify(accountsData));
-                        renderTable();
-                        statusEl.innerText = "CLOUD: SYNCED ✅";
-                    }
-                } else {
-                    statusEl.innerText = "LOCAL MEMORY ACTIVE";
-                }
+                let res = await fetch(SCRIPT_URL);
+                let data = await res.json();
+                sheetData = data;
+                renderTable();
+                document.getElementById('syncStatus').innerText = "STATUS: ĐÃ ĐỒNG BỘ XONG ✅";
             } catch (err) {
                 console.error(err);
-                statusEl.innerText = "OFFLINE MODE";
+                document.getElementById('syncStatus').innerText = "STATUS: LỖI KẾT NỐI ❌";
             }
         }
 
-        // Tự động đẩy dữ liệu lên Cloud
-        async function pushToCloud() {
-            const statusEl = document.getElementById('syncStatus');
-            statusEl.innerText = "SAVING...";
+        async function saveToSheet() {
+            document.getElementById('syncStatus').innerText = "STATUS: ĐANG LƯU LÊN GOOGLE SHEETS...";
             try {
-                const res = await fetch(CLOUD_URL, {
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(accountsData)
+                    body: JSON.stringify(sheetData)
                 });
-                if (res.ok) {
-                    statusEl.innerText = "CLOUD: SYNCED ✅";
-                } else {
-                    statusEl.innerText = "SAVE FAILED ❌";
-                }
+                document.getElementById('syncStatus').innerText = "STATUS: ĐÃ LƯU THÀNH CÔNG ✅";
             } catch (err) {
                 console.error(err);
-                statusEl.innerText = "NETWORK ERROR";
+                document.getElementById('syncStatus').innerText = "STATUS: LƯU THẤT BẠI ❌";
             }
-        }
-
-        function saveAndSync() {
-            localStorage.setItem('npoint_accounts', JSON.stringify(accountsData));
-            pushToCloud();
         }
 
         function renderTable() {
-            const tbody = document.getElementById('account-table-body');
+            const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
 
-            daysList.forEach(day => {
-                const thElement = document.querySelector(`th.th-day[data-day="${day}"]`);
-                if (thElement) {
-                    if (hideCompleted && accountsData.length > 0) {
-                        const allCompleted = accountsData.every(acc => acc.days && acc.days[day]);
-                        thElement.style.display = allCompleted ? 'none' : '';
-                    } else {
-                        thElement.style.display = '';
-                    }
-                }
-            });
-
-            accountsData.forEach((acc, index) => {
-                let rowHtml = `<tr class="cyber-row">
-                    <td class="p-3 text-center text-xs text-slate-500 font-mono">${index + 1}</td>
-                    
+            for (let i = 1; i < sheetData.length; i++) {
+                let row = sheetData[i];
+                let rowHtml = `<tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-xs text-slate-500">${row[0] || i}</td>
                     <td class="p-2 text-left">
-                        <input type="text" value="${acc.username}" 
-                            oninput="updateCellData(${index}, 'username', this.value)" 
-                            class="sheets-cell font-bold text-cyan-300" placeholder="Nhập tài khoản...">
-                    </td>
-
-                    <td class="p-2 text-left">
-                        <input type="text" value="${acc.password}" 
-                            oninput="updateCellData(${index}, 'password', this.value)" 
-                            class="sheets-cell tracking-widest text-slate-300" placeholder="Nhập mật khẩu...">
+                        <input type="text" value="${row[1] || ''}" oninput="updateData(${i}, 1, this.value)" class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
                     </td>`;
 
-                daysList.forEach(day => {
-                    const isChecked = acc.days[day] || false;
-                    const isHidden = (hideCompleted && isChecked);
-                    const displayStyle = isHidden ? 'style="display: none;"' : '';
-                    
-                    rowHtml += `
-                        <td class="p-3 day-cell text-center" data-day="${day}" ${displayStyle}>
-                            <input type="checkbox" ${isChecked ? 'checked' : ''} 
-                                onchange="updateStatus(${index}, '${day}', this.checked)"
-                                class="gaming-checkbox">
-                        </td>
-                    `;
-                });
+                for (let c = 2; c <= 9; c++) {
+                    let isChecked = (row[c] === true || row[c] === "TRUE" || row[c] === "true");
+                    rowHtml += `<td class="p-2 text-center">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="updateCheckbox(${i}, ${c}, this.checked)" class="gaming-checkbox">
+                    </td>`;
+                }
 
-                rowHtml += `
-                    <td class="p-2 text-left pl-4">
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox" ${acc.weekly.checked ? 'checked' : ''} 
-                                onchange="updateWeeklyCheck(${index}, this.checked)"
-                                class="gaming-checkbox weekly-check" title="Weekly Check">
-                            <input type="text" value="${acc.weekly.note || ''}" 
-                                oninput="updateWeeklyNote(${index}, this.value)"
-                                placeholder="Ghi chú weekly..." 
-                                class="sheets-cell text-xs text-purple-300">
-                        </div>
+                rowHtml += `<td class="p-2 text-left pl-4">
+                        <input type="text" value="${row[10] || ''}" oninput="updateData(${i}, 10, this.value)" class="sheets-cell text-purple-300" placeholder="Ghi chú...">
                     </td>
-
-                    <td class="p-3 text-center">
-                        <button onclick="deleteRow(${index})" class="text-slate-600 hover:text-red-400 transition-colors p-1 rounded cursor-pointer font-bold" title="Xóa dòng">✕</button>
+                    <td class="p-2 text-center">
+                        <button onclick="deleteRow(${i})" class="text-slate-600 hover:text-red-400 font-bold p-1">✕</button>
                     </td>
-                `;
-
-                rowHtml += `</tr>`;
+                </tr>`;
                 tbody.innerHTML += rowHtml;
-            });
+            }
         }
 
-        function updateCellData(index, field, value) {
-            accountsData[index][field] = value;
-            saveAndSync();
+        function updateData(rowIndex, colIndex, value) {
+            sheetData[rowIndex][colIndex] = value;
+            saveToSheet();
         }
 
-        function updateStatus(accountIndex, day, status) {
-            accountsData[accountIndex].days[day] = status;
-            saveAndSync();
-            renderTable();
-        }
-
-        function updateWeeklyCheck(accountIndex, status) {
-            accountsData[accountIndex].weekly.checked = status;
-            saveAndSync();
-        }
-
-        function updateWeeklyNote(accountIndex, noteText) {
-            accountsData[accountIndex].weekly.note = noteText;
-            saveAndSync();
+        function updateCheckbox(rowIndex, colIndex, status) {
+            sheetData[rowIndex][colIndex] = status;
+            saveToSheet();
         }
 
         function addNewRow() {
-            const newAcc = {
-                id: Date.now(),
-                username: `account_${accountsData.length + 1}`,
-                password: "password_xyz",
-                days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
-                weekly: { checked: false, note: "" }
-            };
-            accountsData.push(newAcc);
-            saveAndSync();
+            let newRow = new Array(11).fill("");
+            newRow[0] = sheetData.length;
+            sheetData.push(newRow);
             renderTable();
+            saveToSheet();
         }
 
-        function deleteRow(index) {
-            if (accountsData.length <= 1) {
-                alert('Cần giữ lại ít nhất một dòng tài khoản!');
-                return;
-            }
-            if (confirm('Bạn có chắc chắn muốn xóa dòng tài khoản này không?')) {
-                accountsData.splice(index, 1);
-                saveAndSync();
-                renderTable();
-            }
-        }
-
-        function toggleHideCompleted() {
-            hideCompleted = document.getElementById('hideCompletedToggle').checked;
+        function deleteRow(rowIndex) {
+            sheetData.splice(rowIndex, 1);
+            for(let i=1; i<sheetData.length; i++) { sheetData[i][0] = i; }
             renderTable();
+            saveToSheet();
         }
 
-        function resetData() {
-            if (confirm('Bạn có muốn khôi phục lại dữ liệu mặc định không?')) {
-                localStorage.removeItem('npoint_accounts');
-                localStorage.removeItem('npoint_week');
-                location.reload();
-            }
-        }
-
-        async function initApp() {
-            renderTable();
-            await fetchFromCloud();
-        }
-
-        initApp();
+        fetchSheetData();
     </script>
 </body>
 </html>
