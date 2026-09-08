@@ -64,10 +64,10 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-slate-800 gap-4">
             <div>
                 <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400 flex items-center gap-3">
-                    ⚡ GAMING // AUTO-SHEETS SYNC 
+                    ⚡ GAMING // INSTANT SYNC 
                     <span id="accountCount" class="text-xs bg-slate-800 text-cyan-300 px-3 py-1 rounded-full border border-cyan-500/30">0 tài khoản</span>
                 </h1>
-                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động chạy ngầm mỗi 7 giây</p>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ tức thì ngay khi nhập xong hoặc tích chọn</p>
             </div>
             <div>
                 <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer shadow-lg shadow-cyan-500/20 transition-all">+ THÊM DÒNG</button>
@@ -114,8 +114,6 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_Y_aylmeYgUD59Wj651vjLg7dEIjDaiZPFQzhdHmXXPPSO2AWNmeB5nM94B7DUVai/exec";
 
         let accounts = [];
-        let isEditing = false;
-        let lockSyncUntil = 0;
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -160,28 +158,20 @@
             document.getElementById('accountCount').innerText = `${accounts.length} tài khoản`;
         }
 
-        async function fetchSheetData(isAuto = false) {
-            if (isAuto && (isEditing || Date.now() < lockSyncUntil)) return;
-
+        // Tải dữ liệu lần đầu tiên khi mở trang
+        async function fetchSheetData() {
             try {
                 let res = await fetch(SCRIPT_URL);
-                let newData = await res.json();
-                
-                if (JSON.stringify(accounts) !== JSON.stringify(newData)) {
-                    accounts = newData;
-                    renderTable();
-                }
+                accounts = await res.json();
+                renderTable();
             } catch (err) {
                 console.error(err);
-                if (!isAuto) {
-                    showToast("❌ Lỗi kết nối đến Google Sheets!", "error");
-                }
+                showToast("❌ Lỗi kết nối đến Google Sheets!", "error");
             }
         }
 
+        // Đồng bộ ngay lập tức lên Google Sheets khi vừa nhập xong (onblur) hoặc vừa tích chọn (onchange)
         async function saveToSheet() {
-            lockSyncUntil = Date.now() + 3000;
-
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -189,10 +179,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(accounts)
                 });
-                showToast("💾 Đã lưu thay đổi lên Google Sheets!", "success");
+                showToast("💾 Đã đồng bộ lên Google Sheets!", "success");
             } catch (err) {
                 console.error(err);
-                showToast("❌ Lưu thất bại!", "error");
+                showToast("❌ Đồng bộ thất bại!", "error");
             }
         }
 
@@ -206,8 +196,8 @@
                     <td class="p-2 text-left">
                         <div class="flex items-center gap-1.5">
                             <input type="text" value="${item.username || ''}" 
-                                onfocus="isEditing=true" onblur="isEditing=false"
-                                oninput="accounts[${index}].username = this.value; saveToSheet();" 
+                                oninput="accounts[${index}].username = this.value;"
+                                onblur="saveToSheet()" 
                                 class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
                             <button onclick="copyToClipboard('${item.username || ''}', 'Tài khoản')" title="Sao chép tài khoản" class="text-slate-500 hover:text-cyan-400 p-1 cursor-pointer text-xs">📋</button>
                         </div>
@@ -215,8 +205,8 @@
                     <td class="p-2 text-left">
                         <div class="flex items-center gap-1.5">
                             <input type="text" value="${item.password || ''}" 
-                                onfocus="isEditing=true" onblur="isEditing=false"
-                                oninput="accounts[${index}].password = this.value; saveToSheet();" 
+                                oninput="accounts[${index}].password = this.value;"
+                                onblur="saveToSheet()" 
                                 class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
                             <button onclick="copyToClipboard('${item.password || ''}', 'Mật khẩu')" title="Sao chép mật khẩu" class="text-slate-500 hover:text-amber-400 p-1 cursor-pointer text-xs">📋</button>
                         </div>
@@ -226,14 +216,16 @@
                 days.forEach(day => {
                     let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
                     rowHtml += `<td class="p-2 text-center">
-                        <input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; renderTable(); saveToSheet();" class="gaming-checkbox">
+                        <input type="checkbox" ${checked} 
+                            onchange="accounts[${index}].${day} = this.checked; updateProgress(); saveToSheet();" 
+                            class="gaming-checkbox">
                     </td>`;
                 });
 
                 rowHtml += `<td class="p-2 text-left pl-4">
                         <input type="text" value="${item.note || ''}" 
-                            onfocus="isEditing=true" onblur="isEditing=false"
-                            oninput="accounts[${index}].note = this.value; saveToSheet();" 
+                            oninput="accounts[${index}].note = this.value;"
+                            onblur="saveToSheet()" 
                             class="sheets-cell text-purple-300" placeholder="Ghi chú...">
                     </td>
                     <td class="p-2 text-center">
@@ -259,12 +251,8 @@
             showToast("✨ Đã thêm dòng mới!", "success");
         }
 
-        fetchSheetData(false);
-
-        // Vòng lặp ngầm đồng bộ mỗi 7 giây (7000ms)
-        setInterval(() => {
-            fetchSheetData(true);
-        }, 7000);
+        // Chỉ tải dữ liệu một lần duy nhất khi mở trang web
+        fetchSheetData();
     </script>
 </body>
 </html>
