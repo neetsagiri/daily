@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Account Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .gaming-glow {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+        }
+        .gaming-border {
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-mono">
+    <div class="max-w-7xl mx-auto bg-slate-900 border gaming-border rounded-xl p-6 gaming-glow shadow-2xl">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-black tracking-wider text-cyan-400 uppercase drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                    ⚡ SYSTEM // ACCOUNT_MANAGER
+                </h1>
+                <p class="text-xs text-slate-400 mt-1">Quản lý vòng lặp Daily & Weekly tự động hóa</p>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <button onclick="openAddModal()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-sm transition-all shadow-[0_0_10px_rgba(6,182,212,0.4)] flex items-center space-x-1 cursor-pointer">
+                    <span class="text-lg leading-none">+</span> <span>THÊM ACC</span>
+                </button>
+                <button onclick="renderTable()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 px-4 py-2 rounded text-sm transition-all cursor-pointer">
+                    LÀM MỚI
+                </button>
+            </div>
+        </div>
+        
+        <!-- Thanh công cụ -->
+        <div class="flex justify-between items-center mb-6 bg-slate-950/60 p-3 rounded-lg border border-slate-800">
+            <label class="flex items-center space-x-3 cursor-pointer select-none">
+                <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="w-4 h-4 bg-slate-900 border-slate-700 text-cyan-500 rounded focus:ring-0 cursor-pointer">
+                <span class="text-xs font-semibold text-slate-300 tracking-wide uppercase">Ẩn các ngày đã xong trong tuần</span>
+            </label>
+            <span class="text-xs text-slate-500">DATABASE: SINGLE_FILE_MODE</span>
+        </div>
+
+        <!-- Form thêm tài khoản -->
+        <div id="addAccountModal" class="hidden mb-6 p-4 bg-slate-950 border border-cyan-500/40 rounded-lg shadow-inner">
+            <h3 class="font-bold text-cyan-400 text-sm mb-3 tracking-wider uppercase">>> KẾT NỐI TÀI KHOẢN MỚI</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <input type="text" id="newAccountName" placeholder="Tên hiển thị (VD: Main Game)" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm focus:border-cyan-500 outline-none">
+                <input type="text" id="newAccountUsername" placeholder="Username / ID" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm focus:border-cyan-500 outline-none">
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeAddModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded text-xs cursor-pointer">HỦY</button>
+                <button onclick="addNewAccount()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-1.5 rounded text-xs transition-all cursor-pointer">XÁC NHẬN</button>
+            </div>
+        </div>
+
+        <!-- Bảng quản lý -->
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-center text-sm">
+                <thead>
+                    <tr class="bg-slate-950 text-slate-400 text-xs border-b border-slate-800">
+                        <th class="p-3 text-left">TÀI KHOẢN</th>
+                        <th class="p-3" data-day="mon">THỨ 2</th>
+                        <th class="p-3" data-day="tue">THỨ 3</th>
+                        <th class="p-3" data-day="wed">THỨ 4</th>
+                        <th class="p-3" data-day="thu">THỨ 5</th>
+                        <th class="p-3" data-day="fri">THỨ 6</th>
+                        <th class="p-3" data-day="sat">THỨ 7</th>
+                        <th class="p-3" data-day="sun">CHỦ NHẬT</th>
+                        <th class="p-3 text-left pl-6">WEEKLY (CHECK & NOTE)</th>
+                    </tr>
+                </thead>
+                <tbody id="account-table-body" class="divide-y divide-slate-800/60">
+                    <!-- Dữ liệu render bằng JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- MODULE YOUTUBE MUSIC -->
+        <div class="mt-8 bg-slate-950 border border-cyan-500/30 rounded-xl p-5 shadow-inner">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
+                <h2 class="text-lg font-bold text-cyan-400 tracking-wider flex items-center space-x-2">
+                    <span>🎵</span> <span>YOUTUBE MUSIC TERMINAL</span>
+                </h2>
+                <span class="text-xs text-slate-500 uppercase">Audio Stream: Active</span>
+            </div>
+
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="musicSearchInput" placeholder="Nhập tên bài hát, nghệ sĩ hoặc lofi chill..." 
+                    class="flex-1 bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 px-3 py-2 rounded text-sm focus:border-cyan-500 outline-none"
+                    onkeypress="if(event.key === 'Enter') searchMusic()">
+                <button onclick="searchMusic()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2 rounded text-sm transition-all cursor-pointer">
+                    TÌM KIẾM
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-1 bg-slate-900 border border-slate-800 rounded-lg p-3 flex flex-col items-center justify-center min-h-[180px]">
+                    <div id="playerContainer" class="w-full flex justify-center">
+                        <iframe id="ytMusicFrame" class="w-full h-40 rounded border-0 bg-slate-900" src="https://www.youtube.com/embed/jfKfPfyJRdk" allow="autoplay; encrypted-media"></iframe>
+                    </div>
+                    <p id="currentPlayingText" class="text-xs text-slate-400 mt-2 text-center truncate w-full">Đang phát: Lofi Hip Hop Radio - Beats to relax/study to</p>
+                </div>
+
+                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-lg p-3 max-h-48 overflow-y-auto">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase mb-2">Kết quả tìm kiếm & Gợi ý</h3>
+                    <div id="musicResultsList" class="space-y-2">
+                        <div onclick="playSong('jfKfPfyJRdk', 'Lofi Hip Hop Radio (Chill Beats)')" class="flex items-center justify-between p-2 hover:bg-slate-800 rounded cursor-pointer transition-all text-xs">
+                            <span class="text-cyan-300 font-medium">🎧 Lofi Hip Hop Radio (Chill Beats)</span>
+                            <span class="text-slate-500 text-[10px]">Phát ngay</span>
+                        </div>
+                        <div onclick="playSong('5qap5aO4i9A', 'Lofi Sleep / Study Beats')" class="flex items-center justify-between p-2 hover:bg-slate-800 rounded cursor-pointer transition-all text-xs">
+                            <span class="text-cyan-300 font-medium">🎧 Lofi Sleep / Study Beats</span>
+                            <span class="text-slate-500 text-[10px]">Phát ngay</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let accountsData = [
+            {
+                id: 1,
+                name: "Tài khoản Game A",
+                username: "user_01",
+                days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
+                weekly: { checked: false, note: "Điểm danh tuần" }
+            }
+        ];
+        
+        let hideCompleted = false;
+        const daysList = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+        function renderTable() {
+            const tbody = document.getElementById('account-table-body');
+            tbody.innerHTML = '';
+
+            accountsData.forEach((acc, index) => {
+                let rowHtml = `<tr class="hover:bg-slate-800/40 transition-all">
+                    <td class="p-3 text-left font-medium text-cyan-300">
+                        ${acc.name} <br><span class="text-xs text-slate-500 font-normal">${acc.username}</span>
+                    </td>`;
+
+                daysList.forEach(day => {
+                    const isChecked = acc.days[day] || false;
+                    const isHidden = (hideCompleted && isChecked);
+                    const displayStyle = isHidden ? 'style="display: none;"' : '';
+                    
+                    rowHtml += `
+                        <td class="p-2 day-cell" data-day="${day}" ${displayStyle}>
+                            <input type="checkbox" ${isChecked ? 'checked' : ''} 
+                                onchange="updateStatus(${index}, '${day}', this.checked)"
+                                class="w-5 h-5 bg-slate-950 border-slate-700 text-cyan-500 rounded cursor-pointer accent-cyan-500">
+                        </td>
+                    `;
+                });
+
+                rowHtml += `
+                    <td class="p-2 text-left pl-6">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" ${acc.weekly.checked ? 'checked' : ''} 
+                                onchange="updateWeeklyCheck(${index}, this.checked)"
+                                class="w-5 h-5 bg-slate-950 border-slate-700 text-purple-500 rounded cursor-pointer accent-purple-500" title="Weekly Check">
+                            <input type="text" value="${acc.weekly.note || ''}" 
+                                onchange="updateWeeklyNote(${index}, this.value)"
+                                placeholder="Ghi chú weekly..." 
+                                class="bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-600 p-1.5 text-xs rounded w-full focus:border-cyan-500 outline-none">
+                        </div>
+                    </td>
+                `;
+
+                rowHtml += `</tr>`;
+                tbody.innerHTML += rowHtml;
+            });
+        }
+
+        function updateStatus(accountIndex, day, status) {
+            accountsData[accountIndex].days[day] = status;
+            renderTable();
+        }
+
+        function updateWeeklyCheck(accountIndex, status) {
+            accountsData[accountIndex].weekly.checked = status;
+        }
+
+        function updateWeeklyNote(accountIndex, noteText) {
+            accountsData[accountIndex].weekly.note = noteText;
+        }
+
+        function toggleHideCompleted() {
+            hideCompleted = document.getElementById('hideCompletedToggle').checked;
+            renderTable();
+        }
+
+        function openAddModal() {
+            document.getElementById('addAccountModal').classList.remove('hidden');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addAccountModal').classList.add('hidden');
+            document.getElementById('newAccountName').value = '';
+            document.getElementById('newAccountUsername').value = '';
+        }
+
+        function addNewAccount() {
+            const name = document.getElementById('newAccountName').value.trim();
+            const username = document.getElementById('newAccountUsername').value.trim();
+
+            if (!name) {
+                alert('Vui lòng nhập tên tài khoản!');
+                return;
+            }
+
+            const newAcc = {
+                id: Date.now(),
+                name: name,
+                username: username || 'N/A',
+                days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
+                weekly: { checked: false, note: '' }
+            };
+
+            accountsData.push(newAcc);
+            closeAddModal();
+            renderTable();
+        }
+
+        function playSong(videoId, songTitle) {
+            const iframe = document.getElementById('ytMusicFrame');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            document.getElementById('currentPlayingText').innerText = `Đang phát: ${songTitle}`;
+        }
+
+        function searchMusic() {
+            const keyword = document.getElementById('musicSearchInput').value.trim();
+            if (!keyword) return;
+
+            const resultsList = document.getElementById('musicResultsList');
+            resultsList.innerHTML = `<div class="text-xs text-slate-400 p-2">Đang tìm kiếm "${keyword}"...</div>`;
+
+            setTimeout(() => {
+                resultsList.innerHTML = `
+                    <div onclick="playSong('jfKfPfyJRdk', '${keyword} - Gaming Mix')" class="flex items-center justify-between p-2 hover:bg-slate-800 rounded cursor-pointer transition-all text-xs">
+                        <span class="text-cyan-300 font-medium">🎵 ${keyword} (Gaming Mix)</span>
+                        <span class="text-cyan-400 text-[10px] font-bold">▶ PHÁT</span>
+                    </div>
+                    <div onclick="playSong('5qap5aO4i9A', '${keyword} - Lofi Version')" class="flex items-center justify-between p-2 hover:bg-slate-800 rounded cursor-pointer transition-all text-xs">
+                        <span class="text-cyan-300 font-medium">🎵 ${keyword} (Lofi Version)</span>
+                        <span class="text-cyan-400 text-[10px] font-bold">▶ PHÁT</span>
+                    </div>
+                `;
+            }, 300);
+        }
+
+        renderTable();
+    </script>
+</body>
+</html>
