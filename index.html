@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager </title>
+    <title>Gaming Account Manager - Modal Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -60,6 +60,34 @@
     
     <div id="toast-container"></div>
 
+    <!-- POPUP MODAL THÊM TÀI KHOẢN -->
+    <div id="addModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 neon-box rounded-xl p-6 w-full max-w-md space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h2 class="text-sm font-bold text-cyan-400 uppercase tracking-wider">✨ Thêm tài khoản game mới</h2>
+                <button onclick="closeModal()" class="text-slate-500 hover:text-white font-bold text-sm">✕</button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[11px] text-slate-400 block mb-1">Tài khoản (Username)</label>
+                    <input type="text" id="inputUser" class="sheets-cell text-cyan-300 font-bold" placeholder="Nhập tên tài khoản...">
+                </div>
+                <div>
+                    <label class="text-[11px] text-slate-400 block mb-1">Mật khẩu (Password)</label>
+                    <input type="text" id="inputPass" class="sheets-cell text-amber-300" placeholder="Nhập mật khẩu...">
+                </div>
+                <div>
+                    <label class="text-[11px] text-slate-400 block mb-1">Ghi chú (Tùy chọn)</label>
+                    <input type="text" id="inputNote" class="sheets-cell text-purple-300" placeholder="Nhập ghi chú...">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+                <button onclick="closeModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded text-xs cursor-pointer">Hủy</button>
+                <button onclick="submitNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer">Lưu tài khoản</button>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-xl p-3 md:p-6 shadow-2xl">
         <!-- Header & Thống kê -->
         <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800">
@@ -68,10 +96,10 @@
                     ⚡ GAMING 
                     <span id="accountCount" class="text-xs bg-slate-800 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30">0 tài khoản</span>
                 </h1>
-                <p class="text-[11px] text-slate-400 mt-0.5">Quản lý tài khoản game </p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Quản lý tài khoản game đồng bộ Sheets</p>
             </div>
             <div>
-                <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-2 rounded text-xs cursor-pointer shadow-lg shadow-cyan-500/20 transition-all">+ THÊM DÒNG</button>
+                <button onclick="openModal()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-2 rounded text-xs cursor-pointer shadow-lg shadow-cyan-500/20 transition-all">+ THÊM DÒNG</button>
             </div>
         </div>
 
@@ -86,7 +114,7 @@
             </div>
         </div>
 
-        <!-- Danh sách tài khoản (Hiển thị dạng Thẻ card linh hoạt trên Mobile, dạng Bảng trên Desktop) -->
+        <!-- Danh sách tài khoản -->
         <div id="container-body" class="space-y-3 md:space-y-0">
             <!-- Load động qua JS -->
         </div>
@@ -166,11 +194,45 @@
             }
         }
 
+        function openModal() {
+            document.getElementById('inputUser').value = '';
+            document.getElementById('inputPass').value = '';
+            document.getElementById('inputNote').value = '';
+            document.getElementById('addModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('addModal').classList.add('hidden');
+        }
+
+        function submitNewRow() {
+            let u = document.getElementById('inputUser').value.trim();
+            let p = document.getElementById('inputPass').value.trim();
+            let n = document.getElementById('inputNote').value.trim();
+
+            if (!u && !p) {
+                showToast("⚠️ Vui lòng nhập tài khoản hoặc mật khẩu!", "error");
+                return;
+            }
+
+            accounts.push({
+                stt: accounts.length + 1,
+                username: u,
+                password: p,
+                thu2: false, thu3: false, thu4: false, thu5: false, thu6: false, thu7: false, cn: false, cua: false,
+                note: n
+            });
+
+            closeModal();
+            renderUI();
+            saveToSheet();
+            showToast("✨ Đã thêm tài khoản mới!", "success");
+        }
+
         function renderUI() {
             const container = document.getElementById('container-body');
             container.innerHTML = '';
 
-            // Nếu màn hình rộng (Desktop), hiển thị dạng Bảng truyền thống cho đẹp
             if (window.innerWidth >= 768) {
                 let tableHtml = `
                     <div class="overflow-x-auto rounded-lg border border-slate-800">
@@ -227,7 +289,6 @@
                 tableHtml += `</tbody></table></div>`;
                 container.innerHTML = tableHtml;
             } else {
-                // Giao diện Mobile: Mỗi tài khoản là một thẻ Card dọc gọn gàng, dễ tích chọn không sợ lệch
                 accounts.forEach((item, index) => {
                     let card = document.createElement('div');
                     card.className = "bg-slate-950/80 border border-slate-800 rounded-lg p-3 space-y-2.5 relative";
@@ -284,20 +345,6 @@
             updateProgress();
         }
 
-        function addNewRow() {
-            accounts.push({
-                stt: accounts.length + 1,
-                username: "",
-                password: "",
-                thu2: false, thu3: false, thu4: false, thu5: false, thu6: false, thu7: false, cn: false, cua: false,
-                note: ""
-            });
-            renderUI();
-            saveToSheet();
-            showToast("✨ Đã thêm dòng mới!", "success");
-        }
-
-        // Tự động vẽ lại giao diện khi xoay màn hình hoặc đổi kích thước
         window.addEventListener('resize', () => {
             renderUI();
         });
