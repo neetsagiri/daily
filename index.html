@@ -3,187 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager</title>
+    <title>Gaming Account Manager - Cyber Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
+        /* Hiệu ứng nền không gian Cyberpunk Grid & Glow */
+        body {
+            background-color: #030712;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+        }
+
         @keyframes rgb7ColorsBox {
-            0% {
-                border-color: rgba(239, 68, 68, 0.8);
-                box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2);
-            }
-            14% {
-                border-color: rgba(249, 115, 22, 0.8);
-                box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), inset 0 0 15px rgba(249, 115, 22, 0.2);
-            }
-            28% {
-                border-color: rgba(234, 179, 8, 0.8);
-                box-shadow: 0 0 20px rgba(234, 179, 8, 0.4), inset 0 0 15px rgba(234, 179, 8, 0.2);
-            }
-            42% {
-                border-color: rgba(34, 197, 94, 0.8);
-                box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), inset 0 0 15px rgba(34, 197, 94, 0.2);
-            }
-            57% {
-                border-color: rgba(6, 182, 212, 0.8);
-                box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.2);
-            }
-            71% {
-                border-color: rgba(59, 130, 246, 0.8);
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.2);
-            }
-            85% {
-                border-color: rgba(168, 85, 247, 0.8);
-                box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.2);
-            }
-            100% {
-                border-color: rgba(239, 68, 68, 0.8);
-                box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2);
-            }
+            0% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.15); }
+            14% { border-color: rgba(249, 115, 22, 0.7); box-shadow: 0 0 25px rgba(249, 115, 22, 0.3), inset 0 0 15px rgba(249, 115, 22, 0.15); }
+            28% { border-color: rgba(234, 179, 8, 0.7); box-shadow: 0 0 25px rgba(234, 179, 8, 0.3), inset 0 0 15px rgba(234, 179, 8, 0.15); }
+            42% { border-color: rgba(34, 197, 94, 0.7); box-shadow: 0 0 25px rgba(34, 197, 94, 0.3), inset 0 0 15px rgba(34, 197, 94, 0.15); }
+            57% { border-color: rgba(6, 182, 212, 0.7); box-shadow: 0 0 25px rgba(6, 182, 212, 0.3), inset 0 0 15px rgba(6, 182, 212, 0.15); }
+            71% { border-color: rgba(59, 130, 246, 0.7); box-shadow: 0 0 25px rgba(59, 130, 246, 0.3), inset 0 0 15px rgba(59, 130, 246, 0.15); }
+            85% { border-color: rgba(168, 85, 247, 0.7); box-shadow: 0 0 25px rgba(168, 85, 247, 0.3), inset 0 0 15px rgba(168, 85, 247, 0.15); }
+            100% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.15); }
         }
 
         @keyframes rgb7ColorsText {
-            0% { color: #ef4444; text-shadow: 0 0 10px rgba(239,68,68,0.7); }
-            14% { color: #f97316; text-shadow: 0 0 10px rgba(249,115,22,0.7); }
-            28% { color: #eab308; text-shadow: 0 0 10px rgba(234,179,8,0.7); }
-            42% { color: #22c55e; text-shadow: 0 0 10px rgba(34,197,94,0.7); }
-            57% { color: #06b6d4; text-shadow: 0 0 10px rgba(6,182,212,0.7); }
-            71% { color: #3b82f6; text-shadow: 0 0 10px rgba(59,130,246,0.7); }
-            85% { color: #a855f7; text-shadow: 0 0 10px rgba(168,85,247,0.7); }
-            100% { color: #ef4444; text-shadow: 0 0 10px rgba(239,68,68,0.7); }
+            0% { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.6); }
+            14% { color: #f97316; text-shadow: 0 0 12px rgba(249,115,22,0.6); }
+            28% { color: #eab308; text-shadow: 0 0 12px rgba(234,179,8,0.6); }
+            42% { color: #22c55e; text-shadow: 0 0 12px rgba(34,197,94,0.6); }
+            57% { color: #06b6d4; text-shadow: 0 0 12px rgba(6,182,212,0.6); }
+            71% { color: #3b82f6; text-shadow: 0 0 12px rgba(59,130,246,0.6); }
+            85% { color: #a855f7; text-shadow: 0 0 12px rgba(168,85,247,0.6); }
+            100% { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.6); }
         }
 
         @keyframes rgbBorderAnim {
-            0% { border-color: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
-            14% { border-color: #f97316; box-shadow: 0 0 10px rgba(249,115,22,0.5); }
-            28% { border-color: #eab308; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
-            42% { border-color: #22c55e; box-shadow: 0 0 10px rgba(34,197,94,0.5); }
-            57% { border-color: #06b6d4; box-shadow: 0 0 10px rgba(6,182,212,0.5); }
-            71% { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59,130,246,0.5); }
-            85% { border-color: #a855f7; box-shadow: 0 0 10px rgba(168,85,247,0.5); }
-            100% { border-color: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+            0% { border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.4); }
+            14% { border-color: #f97316; box-shadow: 0 0 12px rgba(249,115,22,0.4); }
+            28% { border-color: #eab308; box-shadow: 0 0 12px rgba(234,179,8,0.4); }
+            42% { border-color: #22c55e; box-shadow: 0 0 12px rgba(34,197,94,0.4); }
+            57% { border-color: #06b6d4; box-shadow: 0 0 12px rgba(6,182,212,0.4); }
+            71% { border-color: #3b82f6; box-shadow: 0 0 12px rgba(59,130,246,0.4); }
+            85% { border-color: #a855f7; box-shadow: 0 0 12px rgba(168,85,247,0.4); }
+            100% { border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.4); }
         }
 
-        .neon-box {
-            border: 2px solid;
-            animation: rgb7ColorsBox 12s infinite linear;
+        .neon-box { 
+            border: 2px solid; 
+            animation: rgb7ColorsBox 12s infinite linear; 
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(12px);
         }
 
-        .neon-title {
-            animation: rgb7ColorsText 12s infinite linear;
+        .neon-title { animation: rgb7ColorsText 12s infinite linear; }
+        
+        .neon-rgb-btn { 
+            border: 2px solid; 
+            background-color: rgba(3, 7, 18, 0.8); 
+            animation: rgbBorderAnim 12s infinite linear; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .neon-rgb-btn:hover { 
+            filter: brightness(1.4); 
+            transform: translateY(-2px) scale(1.02); 
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); 
         }
 
-        .neon-rgb-btn {
-            border: 2px solid;
-            background-color: rgba(15, 23, 42, 0.9);
-            animation: rgbBorderAnim 12s infinite linear;
-            transition: all 0.3s ease;
-        }
-        .neon-rgb-btn:hover {
-            filter: brightness(1.3);
-            transform: scale(1.03);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-        }
-
-        /* Cải thiện trực quan ô tích (Checkbox Gaming) */
+        /* Checkbox Gaming cao cấp */
         .gaming-checkbox {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 1.4rem;
-            height: 1.4rem;
-            background-color: #020617;
-            border: 2px solid #334155;
-            border-radius: 0.35rem;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s ease-in-out;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+            appearance: none; 
+            -webkit-appearance: none; 
+            width: 1.5rem; 
+            height: 1.5rem;
+            background-color: #0b0f19; 
+            border: 2px solid #374151; 
+            border-radius: 0.4rem;
+            cursor: pointer; 
+            position: relative; 
+            transition: all 0.25s ease-in-out; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);
+        }
+        .gaming-checkbox:hover { 
+            border-color: #06b6d4; 
+            box-shadow: 0 0 12px rgba(6,182,212,0.6), inset 0 2px 4px rgba(0,0,0,0.9); 
+            transform: scale(1.08);
+        }
+        .gaming-checkbox:checked { 
+            background: linear-gradient(135deg, #06b6d4, #a855f7); 
+            border-color: #38bdf8; 
+            box-shadow: 0 0 16px rgba(6,182,212,0.8), 0 0 25px rgba(168,85,247,0.5); 
+            animation: pulseCheck 0.3s ease;
+        }
+        .gaming-checkbox:checked::after { 
+            content: '✓'; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            color: #030712; 
+            font-size: 0.95rem; 
+            font-weight: 900; 
+        }
+        .gaming-checkbox.weekly-check:checked { 
+            background: linear-gradient(135deg, #ec4899, #8b5cf6); 
+            border-color: #f472b6; 
+            box-shadow: 0 0 16px rgba(236,72,153,0.8), 0 0 25px rgba(139,92,246,0.5); 
         }
 
-        .gaming-checkbox:hover {
-            border-color: #06b6d4;
-            box-shadow: 0 0 8px rgba(6,182,212,0.6), inset 0 0 5px rgba(0,0,0,0.8);
+        @keyframes pulseCheck {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
         }
 
-        .gaming-checkbox:checked {
-            background: linear-gradient(135deg, #06b6d4, #a855f7);
-            border-color: #38bdf8;
-            box-shadow: 0 0 12px rgba(6,182,212,0.8), 0 0 20px rgba(168,85,247,0.5);
+        .neon-input:focus { 
+            border-color: #06b6d4; 
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4); 
         }
 
-        .gaming-checkbox:checked::after {
-            content: '✔';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #020617;
-            font-size: 0.85rem;
-            font-weight: 900;
+        /* Hiệu ứng hover từng dòng bảng */
+        .cyber-row {
+            transition: all 0.2s ease;
         }
-
-        /* Checkbox Weekly riêng màu tím/hồng nổi bật */
-        .gaming-checkbox.weekly-check:checked {
-            background: linear-gradient(135deg, #ec4899, #a855f7);
-            border-color: #f472b6;
-            box-shadow: 0 0 12px rgba(236,72,153,0.8), 0 0 20px rgba(168,85,247,0.5);
-        }
-
-        .neon-input:focus {
-            border-color: #06b6d4;
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        .cyber-row:hover {
+            background-color: rgba(30, 41, 59, 0.5);
+            box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.05);
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-6 font-mono">
-    <div class="max-w-7xl mx-auto bg-slate-900 neon-box rounded-xl p-6 shadow-2xl">
+<body class="text-slate-100 min-h-screen p-4 md:p-8 font-mono">
+    <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
         
+        <!-- Decorative Glow Accents -->
+        <div class="absolute -top-24 -right-24 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
         <!-- Header -->
-        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-5 border-b border-slate-800 gap-4 relative z-10">
             <div>
-                <h1 class="text-2xl font-black tracking-wider uppercase neon-title">
-                    ⚡ SYSTEM // ACCOUNT_MANAGER
+                <div class="flex items-center space-x-2 mb-1">
+                    <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">Secure System Online</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-black tracking-wider uppercase neon-title">
+                    ⚡ GAMING // ACCOUNT_CORE
                 </h1>
-                <p class="text-xs text-slate-400 mt-1">Quản lý vòng lặp Daily & Weekly tự động hóa</p>
+                <p class="text-xs text-slate-400 mt-1">Hệ thống tự động hóa vòng lặp Daily & Weekly v2.5</p>
             </div>
             
-            <div class="flex items-center space-x-3">
-                <button onclick="openAddModal()" class="neon-rgb-btn font-bold px-4 py-2 rounded text-sm neon-title flex items-center space-x-1 cursor-pointer">
-                    <span class="text-lg leading-none">+</span> <span>THÊM ACC</span>
+            <div class="flex items-center space-x-3 flex-wrap gap-2">
+                <button onclick="openGithubModal()" class="neon-rgb-btn font-bold px-4 py-2.5 rounded-xl text-xs neon-title cursor-pointer flex items-center space-x-2 shadow-lg">
+                    <span>⚙️</span> <span>CẤU HÌNH GITHUB</span>
                 </button>
-                <button onclick="resetData()" class="neon-rgb-btn font-bold px-4 py-2 rounded text-sm neon-title cursor-pointer">
-                    LÀM MỚI
+                <button onclick="openAddModal()" class="neon-rgb-btn font-bold px-5 py-2.5 rounded-xl text-sm neon-title cursor-pointer flex items-center space-x-1 shadow-lg">
+                    <span class="text-lg leading-none">+</span> <span>THÊM TÀI KHOẢN</span>
                 </button>
             </div>
         </div>
         
         <!-- Thanh công cụ -->
-        <div class="flex justify-between items-center mb-6 bg-slate-950/80 p-3 rounded-lg border border-slate-800 shadow-inner">
-            <label class="flex items-center space-x-3 cursor-pointer select-none">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-slate-950/70 p-4 rounded-xl border border-slate-800/80 shadow-inner gap-3 relative z-10 backdrop-blur-md">
+            <label class="flex items-center space-x-3 cursor-pointer select-none group">
                 <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="gaming-checkbox">
-                <span class="text-xs font-semibold text-slate-300 tracking-wide uppercase">Ẩn các ngày đã xong trong tuần</span>
+                <span class="text-xs font-semibold text-slate-300 group-hover:text-cyan-300 transition-colors tracking-wide uppercase">Ẩn các ngày đã xong trong tuần</span>
             </label>
-            <span class="text-xs neon-title font-bold">STATUS: RGB_7COLORS_ACTIVE</span>
+            <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span id="syncStatus" class="text-xs neon-title font-bold tracking-wider">STATUS: CONNECTING...</span>
+            </div>
+        </div>
+
+        <!-- Modal Cấu hình GitHub Sync -->
+        <div id="githubModal" class="hidden mb-6 p-5 bg-slate-950/95 border border-cyan-500/60 rounded-xl shadow-2xl relative z-20 backdrop-blur-xl">
+            <h3 class="font-bold text-cyan-400 text-sm mb-2 tracking-wider uppercase flex items-center space-x-2">
+                <span>🛡️</span> <span>CẤU HÌNH GITHUB API CLOUD SYNC</span>
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">Điền thông tin kho lưu trữ GitHub để đồng bộ tự động dữ liệu hai chiều giữa các thiết bị.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                <input type="text" id="ghOwner" placeholder="Tên tài khoản GitHub (Owner)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
+                <input type="text" id="ghRepo" placeholder="Tên Repository (VD: account-manager)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
+                <input type="text" id="ghPath" placeholder="Đường dẫn file (VD: data/accounts.json)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
+                <input type="password" id="ghToken" placeholder="GitHub Personal Access Token (PAT)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeGithubModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition-colors">ĐÓNG</button>
+                <button onclick="saveGithubConfig()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2 rounded-lg text-xs cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all">LƯU & KẾT NỐI</button>
+            </div>
         </div>
 
         <!-- Form thêm tài khoản -->
-        <div id="addAccountModal" class="hidden mb-6 p-4 bg-slate-950 border border-purple-500/60 rounded-lg shadow-inner">
-            <h3 class="font-bold text-purple-400 text-sm mb-3 tracking-wider uppercase">>> KẾT NỐI TÀI KHOẢN MỚI</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                <input type="text" id="newAccountUser" placeholder="Tài khoản (Username / Email)" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm neon-input outline-none">
-                <input type="text" id="newAccountPass" placeholder="Mật khẩu" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm neon-input outline-none">
+        <div id="addAccountModal" class="hidden mb-6 p-5 bg-slate-950/95 border border-purple-500/60 rounded-xl shadow-2xl relative z-20 backdrop-blur-xl">
+            <h3 class="font-bold text-purple-400 text-sm mb-2 tracking-wider uppercase flex items-center space-x-2">
+                <span>➕</span> <span>KẾT NỐI TÀI KHOẢN MỚI VÀO HỆ THỐNG</span>
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">Nhập thông tin đăng nhập để bắt đầu tự động hóa chuỗi nhiệm vụ.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                <input type="text" id="newAccountUser" placeholder="Tài khoản (Username / Email / ID)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
+                <input type="text" id="newAccountPass" placeholder="Mật khẩu tài khoản" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
             </div>
             <div class="flex justify-end space-x-2">
-                <button onclick="closeAddModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded text-xs cursor-pointer">HỦY</button>
-                <button onclick="addNewAccount()" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-4 py-1.5 rounded text-xs neon-button cursor-pointer">XÁC NHẬN</button>
+                <button onclick="closeAddModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition-colors">HỦY</button>
+                <button onclick="addNewAccount()" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-5 py-2 rounded-lg text-xs cursor-pointer shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all">XÁC NHẬN KẾT NỐI</button>
             </div>
         </div>
 
         <!-- Bảng quản lý -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-xl border border-slate-800/80 shadow-2xl relative z-10">
             <table class="w-full border-collapse text-center text-sm">
                 <thead>
-                    <tr class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800">
-                        <th class="p-3 text-left">TÀI KHOẢN & MẬT KHẨU</th>
+                    <tr class="bg-slate-950/90 text-slate-300 text-xs border-b border-slate-800 uppercase tracking-wider">
+                        <th class="p-4 text-left font-bold text-cyan-400">TÀI KHOẢN & MẬT KHẨU</th>
                         <th class="p-3 th-day" data-day="mon">THỨ 2</th>
                         <th class="p-3 th-day" data-day="tue">THỨ 3</th>
                         <th class="p-3 th-day" data-day="wed">THỨ 4</th>
@@ -191,13 +222,21 @@
                         <th class="p-3 th-day" data-day="fri">THỨ 6</th>
                         <th class="p-3 th-day" data-day="sat">THỨ 7</th>
                         <th class="p-3 th-day" data-day="sun">CHỦ NHẬT</th>
-                        <th class="p-3 text-left pl-6">WEEKLY (CHECK & NOTE)</th>
+                        <th class="p-4 text-left pl-6 font-bold text-purple-400">WEEKLY (CHECK & NOTE)</th>
                     </tr>
                 </thead>
-                <tbody id="account-table-body" class="divide-y divide-slate-800/60">
+                <tbody id="account-table-body" class="divide-y divide-slate-800/50 bg-slate-900/40">
                     <!-- Dữ liệu render bằng JS -->
                 </tbody>
             </table>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="mt-6 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2 relative z-10">
+            <span>🛡️ Tự động reset trạng thái Daily vào Thứ Hai hàng tuần.</span>
+            <button onclick="resetData()" class="text-red-400 hover:text-red-300 font-bold transition-colors cursor-pointer bg-red-950/30 px-3 py-1 rounded border border-red-500/20">
+                ⚠️ Khôi phục dữ liệu gốc
+            </button>
         </div>
 
     </div>
@@ -211,9 +250,6 @@
             return d.getUTCFullYear() + '-W' + weekNo;
         }
 
-        let currentWeek = getWeekNumber(new Date());
-        let savedWeek = localStorage.getItem('gaming_current_week');
-
         let accountsData = JSON.parse(localStorage.getItem('gaming_accounts')) || [
             {
                 id: 1,
@@ -224,26 +260,129 @@
             }
         ];
 
-        if (savedWeek !== currentWeek) {
-            accountsData.forEach(acc => {
-                if (acc.days) {
-                    Object.keys(acc.days).forEach(day => {
-                        acc.days[day] = false;
-                    });
-                }
-                if (acc.weekly) {
-                    acc.weekly.checked = false;
-                }
-            });
-            localStorage.setItem('gaming_current_week', currentWeek);
-            localStorage.setItem('gaming_accounts', JSON.stringify(accountsData));
-        }
-        
         let hideCompleted = false;
         const daysList = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
-        function saveToStorage() {
+        function getGhConfig() {
+            return {
+                owner: localStorage.getItem('gh_owner') || '',
+                repo: localStorage.getItem('gh_repo') || '',
+                path: localStorage.getItem('gh_path') || 'data/accounts.json',
+                token: localStorage.getItem('gh_token') || ''
+            };
+        }
+
+        function openGithubModal() {
+            const cfg = getGhConfig();
+            document.getElementById('ghOwner').value = cfg.owner;
+            document.getElementById('ghRepo').value = cfg.repo;
+            document.getElementById('ghPath').value = cfg.path;
+            document.getElementById('ghToken').value = cfg.token;
+            document.getElementById('githubModal').classList.remove('hidden');
+        }
+
+        function closeGithubModal() {
+            document.getElementById('githubModal').classList.add('hidden');
+        }
+
+        function saveGithubConfig() {
+            localStorage.setItem('gh_owner', document.getElementById('ghOwner').value.trim());
+            localStorage.setItem('gh_repo', document.getElementById('ghRepo').value.trim());
+            localStorage.setItem('gh_path', document.getElementById('ghPath').value.trim());
+            localStorage.setItem('gh_token', document.getElementById('ghToken').value.trim());
+            closeGithubModal();
+            initCloudSync();
+        }
+
+        async function fetchFromCloud() {
+            const cfg = getGhConfig();
+            const statusEl = document.getElementById('syncStatus');
+
+            if (!cfg.owner || !cfg.repo || !cfg.token) {
+                statusEl.innerText = "STATUS: LOCAL_MODE (Chưa cấu hình GitHub)";
+                return;
+            }
+
+            statusEl.innerText = "STATUS: SYNCING...";
+            try {
+                const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `token ${cfg.token}` }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    const decodedContent = decodeURIComponent(escape(atob(data.content)));
+                    accountsData = JSON.parse(decodedContent);
+                    
+                    let currentWeek = getWeekNumber(new Date());
+                    let savedWeek = localStorage.getItem('gaming_current_week');
+                    if (savedWeek !== currentWeek) {
+                        accountsData.forEach(acc => {
+                            if (acc.days) Object.keys(acc.days).forEach(day => acc.days[day] = false);
+                            if (acc.weekly) acc.weekly.checked = false;
+                        });
+                        localStorage.setItem('gaming_current_week', currentWeek);
+                    }
+
+                    localStorage.setItem('gaming_accounts', JSON.stringify(accountsData));
+                    renderTable();
+                    statusEl.innerText = "STATUS: CLOUD_SYNCED ✅";
+                } else {
+                    statusEl.innerText = "STATUS: SYNC_FAILED ❌";
+                }
+            } catch (err) {
+                console.error(err);
+                statusEl.innerText = "STATUS: OFFLINE_MODE";
+            }
+        }
+
+        async function pushToCloud() {
+            const cfg = getGhConfig();
+            if (!cfg.owner || !cfg.repo || !cfg.token) return;
+
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.innerText = "STATUS: SAVING...";
+
+            try {
+                const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+                let sha = '';
+                const getRes = await fetch(url, {
+                    headers: { 'Authorization': `token ${cfg.token}` }
+                });
+                if (getRes.ok) {
+                    const fileData = await getRes.json();
+                    sha = fileData.sha;
+                }
+
+                const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(accountsData, null, 2))));
+                const putRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${cfg.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: "Auto-sync account manager data",
+                        content: contentEncoded,
+                        sha: sha ? sha : undefined
+                    })
+                });
+
+                if (putRes.ok) {
+                    statusEl.innerText = "STATUS: CLOUD_SYNCED ✅";
+                } else {
+                    statusEl.innerText = "STATUS: SAVE_FAILED ❌";
+                }
+            } catch (err) {
+                console.error(err);
+                statusEl.innerText = "STATUS: NETWORK_ERROR";
+            }
+        }
+
+        function saveDataAndSync() {
             localStorage.setItem('gaming_accounts', JSON.stringify(accountsData));
+            pushToCloud();
         }
 
         function renderTable() {
@@ -263,10 +402,14 @@
             });
 
             accountsData.forEach((acc, index) => {
-                let rowHtml = `<tr class="hover:bg-slate-800/40 transition-all">
-                    <td class="p-3 text-left font-medium text-slate-200">
-                        <div class="text-xs"><span class="text-slate-500">ACC:</span> ${acc.username}</div>
-                        <div class="text-xs"><span class="text-slate-500">PW:</span> <span class="tracking-widest">${acc.password}</span></div>
+                let rowHtml = `<tr class="cyber-row">
+                    <td class="p-4 text-left font-medium text-slate-200">
+                        <div class="text-xs font-bold text-cyan-300 flex items-center space-x-1">
+                            <span class="text-slate-500">ACC:</span> <span>${acc.username}</span>
+                        </div>
+                        <div class="text-xs text-slate-400 mt-0.5 flex items-center space-x-1">
+                            <span class="text-slate-500">PW:</span> <span class="tracking-widest text-slate-300">${acc.password}</span>
+                        </div>
                     </td>`;
 
                 daysList.forEach(day => {
@@ -275,7 +418,7 @@
                     const displayStyle = isHidden ? 'style="display: none;"' : '';
                     
                     rowHtml += `
-                        <td class="p-2 day-cell" data-day="${day}" ${displayStyle}>
+                        <td class="p-3 day-cell" data-day="${day}" ${displayStyle}>
                             <input type="checkbox" ${isChecked ? 'checked' : ''} 
                                 onchange="updateStatus(${index}, '${day}', this.checked)"
                                 class="gaming-checkbox">
@@ -284,15 +427,15 @@
                 });
 
                 rowHtml += `
-                    <td class="p-2 text-left pl-6">
-                        <div class="flex items-center space-x-2">
+                    <td class="p-3 text-left pl-6">
+                        <div class="flex items-center space-x-3">
                             <input type="checkbox" ${acc.weekly.checked ? 'checked' : ''} 
                                 onchange="updateWeeklyCheck(${index}, this.checked)"
                                 class="gaming-checkbox weekly-check" title="Weekly Check">
                             <input type="text" value="${acc.weekly.note || ''}" 
                                 onchange="updateWeeklyNote(${index}, this.value)"
-                                placeholder="Ghi chú weekly..." 
-                                class="bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-600 p-1.5 text-xs rounded w-full neon-input outline-none">
+                                placeholder="Nhập ghi chú weekly..." 
+                                class="bg-slate-950/80 border border-slate-700 text-slate-200 placeholder-slate-600 px-3 py-2 text-xs rounded-lg w-full neon-input outline-none transition-all">
                         </div>
                     </td>
                 `;
@@ -304,18 +447,18 @@
 
         function updateStatus(accountIndex, day, status) {
             accountsData[accountIndex].days[day] = status;
-            saveToStorage();
+            saveDataAndSync();
             renderTable();
         }
 
         function updateWeeklyCheck(accountIndex, status) {
             accountsData[accountIndex].weekly.checked = status;
-            saveToStorage();
+            saveDataAndSync();
         }
 
         function updateWeeklyNote(accountIndex, noteText) {
             accountsData[accountIndex].weekly.note = noteText;
-            saveToStorage();
+            saveDataAndSync();
         }
 
         function toggleHideCompleted() {
@@ -351,7 +494,7 @@
             };
 
             accountsData.push(newAcc);
-            saveToStorage();
+            saveDataAndSync();
             closeAddModal();
             renderTable();
         }
@@ -364,7 +507,12 @@
             }
         }
 
-        renderTable();
+        async function initCloudSync() {
+            renderTable();
+            await fetchFromCloud();
+        }
+
+        initCloudSync();
     </script>
 </body>
 </html>
