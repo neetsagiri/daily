@@ -6,7 +6,6 @@
     <title>Gaming Account Manager</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Hiệu ứng viền Neon đậm chất gaming */
         .neon-box {
             border: 2px solid rgba(6, 182, 212, 0.6);
             box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), inset 0 0 15px rgba(6, 182, 212, 0.15);
@@ -59,8 +58,8 @@
         <div id="addAccountModal" class="hidden mb-6 p-4 bg-slate-950 border border-cyan-500/60 rounded-lg shadow-[0_0_15px_rgba(6,182,212,0.2)]">
             <h3 class="font-bold text-cyan-400 text-sm mb-3 tracking-wider uppercase">>> KẾT NỐI TÀI KHOẢN MỚI</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                <input type="text" id="newAccountName" placeholder="Tên hiển thị (VD: Main Game)" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm neon-input outline-none">
-                <input type="text" id="newAccountUsername" placeholder="Username / ID" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm neon-input outline-none">
+                <input type="text" id="newAccountUser" placeholder="Tài khoản (Username / Email)" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm neon-input outline-none">
+                <input type="text" id="newAccountPass" placeholder="Mật khẩu" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm neon-input outline-none">
             </div>
             <div class="flex justify-end space-x-2">
                 <button onclick="closeAddModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded text-xs cursor-pointer">HỦY</button>
@@ -73,7 +72,7 @@
             <table class="w-full border-collapse text-center text-sm">
                 <thead>
                     <tr class="bg-slate-950 text-cyan-300 text-xs border-b border-cyan-500/30">
-                        <th class="p-3 text-left">TÀI KHOẢN</th>
+                        <th class="p-3 text-left">TÀI KHOẢN & MẬT KHẨU</th>
                         <th class="p-3">THỨ 2</th>
                         <th class="p-3">THỨ 3</th>
                         <th class="p-3">THỨ 4</th>
@@ -111,20 +110,20 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div class="lg:col-span-1 bg-slate-900 border border-cyan-500/30 rounded-lg p-3 flex flex-col items-center justify-center min-h-[180px]">
                     <div id="playerContainer" class="w-full flex justify-center">
-                        <iframe id="ytMusicFrame" class="w-full h-40 rounded border-0 bg-slate-900 shadow-[0_0_10px_rgba(6,182,212,0.2)]" src="https://www.youtube.com/embed/jfKfPfyJRdk" allow="autoplay; encrypted-media"></iframe>
+                        <iframe id="ytMusicFrame" class="w-full h-40 rounded border-0 bg-slate-900 shadow-[0_0_10px_rgba(6,182,212,0.2)]" src="https://www.youtube.com/embed/5qap5aO4i9A" allow="autoplay; encrypted-media"></iframe>
                     </div>
-                    <p id="currentPlayingText" class="text-xs text-cyan-300/80 mt-2 text-center truncate w-full">Đang phát: Lofi Hip Hop Radio - Beats to relax/study to</p>
+                    <p id="currentPlayingText" class="text-xs text-cyan-300/80 mt-2 text-center truncate w-full">Đang phát: Lofi Hip Hop Beats</p>
                 </div>
 
                 <div class="lg:col-span-2 bg-slate-900 border border-cyan-500/30 rounded-lg p-3 max-h-48 overflow-y-auto">
                     <h3 class="text-xs font-semibold text-cyan-300 uppercase mb-2">Kết quả tìm kiếm & Gợi ý</h3>
                     <div id="musicResultsList" class="space-y-2">
-                        <div onclick="playSong('jfKfPfyJRdk', 'Lofi Hip Hop Radio (Chill Beats)')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
-                            <span class="text-cyan-300 font-medium">🎧 Lofi Hip Hop Radio (Chill Beats)</span>
+                        <div onclick="playSong('5qap5aO4i9A', 'Lofi Hip Hop Beats')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
+                            <span class="text-cyan-300 font-medium">🎧 Lofi Hip Hop Beats</span>
                             <span class="text-cyan-400 text-[10px]">Phát ngay</span>
                         </div>
-                        <div onclick="playSong('4xDzrJKXOOY', 'Synthwave / Retrowave Gaming Radio')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
-                            <span class="text-cyan-300 font-medium">🎧 Synthwave / Retrowave Gaming Radio</span>
+                        <div onclick="playSong('DWcJFNfaw9c', 'Synthwave Radio - Chill Synth / Retrowave Beats')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
+                            <span class="text-cyan-300 font-medium">🎧 Synthwave Radio (Retrowave Beats)</span>
                             <span class="text-cyan-400 text-[10px]">Phát ngay</span>
                         </div>
                     </div>
@@ -138,8 +137,8 @@
         let accountsData = [
             {
                 id: 1,
-                name: "Tài khoản Game A",
                 username: "user_01",
+                password: "password_123",
                 days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
                 weekly: { checked: false, note: "Điểm danh tuần" }
             }
@@ -155,13 +154,15 @@
             accountsData.forEach((acc, index) => {
                 let rowHtml = `<tr class="hover:bg-slate-800/40 transition-all">
                     <td class="p-3 text-left font-medium text-cyan-300">
-                        ${acc.name} <br><span class="text-xs text-slate-500 font-normal">${acc.username}</span>
+                        <div class="text-xs"><span class="text-slate-500">ACC:</span> ${acc.username}</div>
+                        <div class="text-xs"><span class="text-slate-500">PW:</span> <span class="tracking-widest">${acc.password}</span></div>
                     </td>`;
 
                 daysList.forEach(day => {
                     const isChecked = acc.days[day] || false;
                     const isHidden = (hideCompleted && isChecked);
-                    const displayStyle = isHidden ? 'style="visibility: hidden; pointer-events: none;"' : '';
+                    // Dùng display: none để ẩn hoàn toàn kể cả Thứ 2
+                    const displayStyle = isHidden ? 'style="display: none;"' : '';
                     
                     rowHtml += `
                         <td class="p-2 day-cell" data-day="${day}" ${displayStyle}>
@@ -215,23 +216,23 @@
 
         function closeAddModal() {
             document.getElementById('addAccountModal').classList.add('hidden');
-            document.getElementById('newAccountName').value = '';
-            document.getElementById('newAccountUsername').value = '';
+            document.getElementById('newAccountUser').value = '';
+            document.getElementById('newAccountPass').value = '';
         }
 
         function addNewAccount() {
-            const name = document.getElementById('newAccountName').value.trim();
-            const username = document.getElementById('newAccountUsername').value.trim();
+            const username = document.getElementById('newAccountUser').value.trim();
+            const password = document.getElementById('newAccountPass').value.trim();
 
-            if (!name) {
-                alert('Vui lòng nhập tên tài khoản!');
+            if (!username) {
+                alert('Vui lòng nhập tài khoản!');
                 return;
             }
 
             const newAcc = {
                 id: Date.now(),
-                name: name,
-                username: username || 'N/A',
+                username: username,
+                password: password || 'N/A',
                 days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
                 weekly: { checked: false, note: '' }
             };
@@ -256,11 +257,11 @@
 
             setTimeout(() => {
                 resultsList.innerHTML = `
-                    <div onclick="playSong('jfKfPfyJRdk', '${keyword} - Gaming Mix')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
+                    <div onclick="playSong('5qap5aO4i9A', '${keyword} - Gaming Mix')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
                         <span class="text-cyan-300 font-medium">🎵 ${keyword} (Gaming Mix)</span>
                         <span class="text-cyan-400 text-[10px] font-bold">▶ PHÁT</span>
                     </div>
-                    <div onclick="playSong('4xDzrJKXOOY', '${keyword} - Synthwave Version')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
+                    <div onclick="playSong('DWcJFNfaw9c', '${keyword} - Synthwave Version')" class="flex items-center justify-between p-2 hover:bg-cyan-950/40 rounded cursor-pointer transition-all text-xs border border-transparent hover:border-cyan-500/30">
                         <span class="text-cyan-300 font-medium">🎵 ${keyword} (Synthwave Version)</span>
                         <span class="text-cyan-400 text-[10px] font-bold">▶ PHÁT</span>
                     </div>
