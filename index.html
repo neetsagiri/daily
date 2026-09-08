@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Auto Sheets Sync</title>
+    <title>Gaming Account Manager - Pro Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -16,7 +16,6 @@
             background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
 
-        /* Hiệu ứng viền Neon đổi màu liên tục mượt mà */
         @keyframes rgbNeonCycle {
             0% { border-color: #ff2a6d; box-shadow: 0 0 30px rgba(255, 42, 109, 0.4); }
             33% { border-color: #05d9e8; box-shadow: 0 0 30px rgba(5, 217, 232, 0.4); }
@@ -43,24 +42,53 @@
             background: transparent; border: 1px solid transparent; color: #cbd5e1; padding: 6px 10px; border-radius: 4px; width: 100%; font-size: 13px;
         }
         .sheets-cell:focus { border-color: #06b6d4; background: rgba(15, 23, 42, 0.95); outline: none; }
+
+        /* Hiệu ứng Toast Notification bay lên góc */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            background: rgba(15, 23, 42, 0.95); border-left: 4px solid #06b6d4; color: #f8fafc;
+            padding: 12px 20px; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            font-size: 12px; font-family: monospace; backdrop-filter: blur(8px);
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.2s forwards;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen p-4 md:p-8 font-mono">
+    
+    <!-- Toast Container chứa thông báo nổi -->
+    <div id="toast-container"></div>
+
     <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-6 shadow-2xl">
-        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+        <!-- Header & Thống kê -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-slate-800 gap-4">
             <div>
-                <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400">⚡ GAMING // AUTO-SHEETS SYNC</h1>
-                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động làm mới mỗi 1 giây</p>
+                <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400 flex items-center gap-3">
+                    ⚡ GAMING // AUTO-SHEETS SYNC 
+                    <span id="accountCount" class="text-xs bg-slate-800 text-cyan-300 px-3 py-1 rounded-full border border-cyan-500/30">0 tài khoản</span>
+                </h1>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động chạy ngầm mỗi 1 giây</p>
             </div>
             <div>
-                <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer">+ THÊM DÒNG</button>
+                <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer shadow-lg shadow-cyan-500/20 transition-all">+ THÊM DÒNG</button>
             </div>
         </div>
 
-        <div class="flex justify-between items-center mb-4 bg-slate-950/70 p-3 rounded-lg border border-slate-800">
-            <span id="syncStatus" class="text-xs text-emerald-400 font-bold">STATUS: ĐANG CHẠY NGẦM TỰ ĐỘNG (1S) 🟢</span>
+        <!-- Thanh tiến độ tuần (Weekly Progress Bar) -->
+        <div class="mb-6 bg-slate-950/70 p-4 rounded-xl border border-slate-800">
+            <div class="flex justify-between items-center mb-2 text-xs">
+                <span class="text-slate-400 font-bold uppercase tracking-wider">📊 Tiến độ hoàn thành tuần này</span>
+                <span id="progressText" class="text-cyan-400 font-bold">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                <div id="progressBar" class="bg-gradient-to-r from-cyan-500 to-purple-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
         </div>
 
+        <!-- Bảng dữ liệu -->
         <div class="overflow-x-auto rounded-xl border border-slate-800">
             <table class="w-full border-collapse text-center text-sm">
                 <thead>
@@ -81,7 +109,7 @@
                     </tr>
                 </thead>
                 <tbody id="table-body" class="divide-y divide-slate-800/50">
-                    <!-- Dữ liệu load từ Sheets -->
+                    <!-- Dữ liệu load động -->
                 </tbody>
             </table>
         </div>
@@ -93,8 +121,53 @@
         let accounts = [];
         let isEditing = false;
 
+        // Hàm tạo thông báo nổi (Toast Notification)
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast`;
+            if (type === 'success') toast.style.borderLeftColor = '#10b981';
+            if (type === 'error') toast.style.borderLeftColor = '#ef4444';
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        // Hàm sao chép nhanh vào Clipboard
+        function copyToClipboard(text, label) {
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`📋 Đã sao chép ${label}: ${text}`, 'success');
+            }).catch(err => {
+                showToast(`❌ Không thể sao chép!`, 'error');
+            });
+        }
+
+        // Tính toán và cập nhật thanh tiến độ tuần
+        function updateProgress() {
+            let totalCheckboxes = accounts.length * 8; // 8 cột (Thứ 2 -> Cửa tuần)
+            if (totalCheckboxes === 0) {
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('progressText.innerText = '0%';
+                document.getElementById('accountCount').innerText = '0 tài khoản';
+                return;
+            }
+
+            let checkedCount = 0;
+            accounts.forEach(item => {
+                const days = ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'];
+                days.forEach(day => {
+                    if (item[day] === true || item[day] === "TRUE") checkedCount++;
+                });
+            });
+
+            let percent = Math.round((checkedCount / totalCheckboxes) * 100);
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').innerText = percent + '% hoàn thành';
+            document.getElementById('accountCount').innerText = `${accounts.length} tài khoản`;
+        }
+
         async function fetchSheetData(isAuto = false) {
-            // Nếu người dùng đang gõ phím hoặc tích chọn, tạm dừng fetch ngầm để không bị reset con trỏ
             if (isAuto && isEditing) return;
 
             try {
@@ -105,18 +178,15 @@
                     accounts = newData;
                     renderTable();
                 }
-
-                document.getElementById('syncStatus').innerText = "STATUS: ĐANG CHẠY NGẦM TỰ ĐỘNG (1S) 🟢";
             } catch (err) {
                 console.error(err);
                 if (!isAuto) {
-                    document.getElementById('syncStatus').innerText = "STATUS: LỖI KẾT NỐI NGẦM ❌";
+                    showToast("❌ Lỗi kết nối đến Google Sheets!", "error");
                 }
             }
         }
 
         async function saveToSheet() {
-            document.getElementById('syncStatus').innerText = "STATUS: ĐANG LƯU LÊN GOOGLE SHEETS...";
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -124,10 +194,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(accounts)
                 });
-                document.getElementById('syncStatus').innerText = "STATUS: ĐÃ LƯU THÀNH CÔNG ✅";
+                showToast("💾 Đã lưu thay đổi lên Google Sheets!", "success");
             } catch (err) {
                 console.error(err);
-                document.getElementById('syncStatus').innerText = "STATUS: LƯU THẤT BẠI ❌";
+                showToast("❌ Lưu thất bại!", "error");
             }
         }
 
@@ -136,26 +206,32 @@
             tbody.innerHTML = '';
 
             accounts.forEach((item, index) => {
-                let rowHtml = `<tr class="hover:bg-slate-800/40">
+                let rowHtml = `<tr class="hover:bg-slate-800/40 transition-colors">
                     <td class="p-3 text-xs text-slate-500">${index + 1}</td>
                     <td class="p-2 text-left">
-                        <input type="text" value="${item.username || ''}" 
-                            onfocus="isEditing=true" onblur="isEditing=false"
-                            oninput="accounts[${index}].username = this.value; saveToSheet();" 
-                            class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
+                        <div class="flex items-center gap-1.5">
+                            <input type="text" value="${item.username || ''}" 
+                                onfocus="isEditing=true" onblur="isEditing=false"
+                                oninput="accounts[${index}].username = this.value; saveToSheet();" 
+                                class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
+                            <button onclick="copyToClipboard('${item.username || ''}', 'Tài khoản')" title="Sao chép tài khoản" class="text-slate-500 hover:text-cyan-400 p-1 cursor-pointer text-xs">📋</button>
+                        </div>
                     </td>
                     <td class="p-2 text-left">
-                        <input type="text" value="${item.password || ''}" 
-                            onfocus="isEditing=true" onblur="isEditing=false"
-                            oninput="accounts[${index}].password = this.value; saveToSheet();" 
-                            class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
+                        <div class="flex items-center gap-1.5">
+                            <input type="text" value="${item.password || ''}" 
+                                onfocus="isEditing=true" onblur="isEditing=false"
+                                oninput="accounts[${index}].password = this.value; saveToSheet();" 
+                                class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
+                            <button onclick="copyToClipboard('${item.password || ''}', 'Mật khẩu')" title="Sao chép mật khẩu" class="text-slate-500 hover:text-amber-400 p-1 cursor-pointer text-xs">📋</button>
+                        </div>
                     </td>`;
 
                 const days = ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'];
                 days.forEach(day => {
                     let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
                     rowHtml += `<td class="p-2 text-center">
-                        <input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; saveToSheet();" class="gaming-checkbox">
+                        <input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; renderTable(); saveToSheet();" class="gaming-checkbox">
                     </td>`;
                 });
 
@@ -166,11 +242,13 @@
                             class="sheets-cell text-purple-300" placeholder="Ghi chú...">
                     </td>
                     <td class="p-2 text-center">
-                        <button onclick="accounts.splice(${index}, 1); renderTable(); saveToSheet();" class="text-slate-600 hover:text-red-400 font-bold p-1 cursor-pointer">✕</button>
+                        <button onclick="accounts.splice(${index}, 1); renderTable(); saveToSheet(); showToast('🗑️ Đã xóa dòng!', 'info');" class="text-slate-600 hover:text-red-400 font-bold p-1 cursor-pointer" title="Xóa dòng">✕</button>
                     </td>
                 </tr>`;
                 tbody.innerHTML += rowHtml;
             });
+
+            updateProgress();
         }
 
         function addNewRow() {
@@ -183,12 +261,13 @@
             });
             renderTable();
             saveToSheet();
+            showToast("✨ Đã thêm dòng mới!", "success");
         }
 
-        // Tải dữ liệu lần đầu ngay khi mở trang
+        // Tải dữ liệu ban đầu
         fetchSheetData(false);
 
-        // Vòng lặp chạy ngầm tự động làm mới mỗi 1 giây (1000ms)
+        // Vòng lặp ngầm 1 giây đồng bộ
         setInterval(() => {
             fetchSheetData(true);
         }, 1000);
