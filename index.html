@@ -67,7 +67,7 @@
                     ⚡ GAMING // AUTO-SHEETS SYNC 
                     <span id="accountCount" class="text-xs bg-slate-800 text-cyan-300 px-3 py-1 rounded-full border border-cyan-500/30">0 tài khoản</span>
                 </h1>
-                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động chạy ngầm mỗi 1 giây</p>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động chạy ngầm mỗi 7 giây</p>
             </div>
             <div>
                 <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer shadow-lg shadow-cyan-500/20 transition-all">+ THÊM DÒNG</button>
@@ -261,9 +261,10 @@
 
         fetchSheetData(false);
 
+        // Vòng lặp ngầm đồng bộ mỗi 7 giây (7000ms)
         setInterval(() => {
             fetchSheetData(true);
-        }, 1000);
+        }, 7000);
     </script>
 </body>
 </html>
