@@ -6,39 +6,59 @@
     <title>Gaming Account Manager</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        @keyframes rgbGlow {
+        @keyframes rgb7ColorsBox {
             0% {
-                border-color: rgba(6, 182, 212, 0.7);
+                border-color: rgba(239, 68, 68, 0.8); /* Đỏ */
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2);
+            }
+            14% {
+                border-color: rgba(249, 115, 22, 0.8); /* Cam */
+                box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), inset 0 0 15px rgba(249, 115, 22, 0.2);
+            }
+            28% {
+                border-color: rgba(234, 179, 8, 0.8); /* Vàng */
+                box-shadow: 0 0 20px rgba(234, 179, 8, 0.4), inset 0 0 15px rgba(234, 179, 8, 0.2);
+            }
+            42% {
+                border-color: rgba(34, 197, 94, 0.8); /* Lục */
+                box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), inset 0 0 15px rgba(34, 197, 94, 0.2);
+            }
+            57% {
+                border-color: rgba(6, 182, 212, 0.8); /* Lam */
                 box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.2);
             }
-            33% {
-                border-color: rgba(168, 85, 247, 0.7);
-                box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.2);
-            }
-            66% {
-                border-color: rgba(59, 130, 246, 0.7);
+            71% {
+                border-color: rgba(59, 130, 246, 0.8); /* Chàm */
                 box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.2);
             }
+            85% {
+                border-color: rgba(168, 85, 247, 0.8); /* Tím */
+                box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.2);
+            }
             100% {
-                border-color: rgba(6, 182, 212, 0.7);
-                box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.2);
+                border-color: rgba(239, 68, 68, 0.8); /* Quay lại Đỏ */
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2);
             }
         }
 
-        @keyframes rgbText {
-            0% { color: #22d3ee; text-shadow: 0 0 10px rgba(34,211,238,0.7); }
-            33% { color: #c084fc; text-shadow: 0 0 10px rgba(192,132,252,0.7); }
-            66% { color: #60a5fa; text-shadow: 0 0 10px rgba(96,165,250,0.7); }
-            100% { color: #22d3ee; text-shadow: 0 0 10px rgba(34,211,238,0.7); }
+        @keyframes rgb7ColorsText {
+            0% { color: #ef4444; text-shadow: 0 0 10px rgba(239,68,68,0.7); }
+            14% { color: #f97316; text-shadow: 0 0 10px rgba(249,115,22,0.7); }
+            28% { color: #eab308; text-shadow: 0 0 10px rgba(234,179,8,0.7); }
+            42% { color: #22c55e; text-shadow: 0 0 10px rgba(34,197,94,0.7); }
+            57% { color: #06b6d4; text-shadow: 0 0 10px rgba(6,182,212,0.7); }
+            71% { color: #3b82f6; text-shadow: 0 0 10px rgba(59,130,246,0.7); }
+            85% { color: #a855f7; text-shadow: 0 0 10px rgba(168,85,247,0.7); }
+            100% { color: #ef4444; text-shadow: 0 0 10px rgba(239,68,68,0.7); }
         }
 
         .neon-box {
             border: 2px solid;
-            animation: rgbGlow 8s infinite ease-in-out;
+            animation: rgb7ColorsBox 12s infinite linear;
         }
 
         .neon-title {
-            animation: rgbText 8s infinite ease-in-out;
+            animation: rgb7ColorsText 12s infinite linear;
         }
 
         .neon-button {
@@ -46,7 +66,7 @@
         }
         .neon-button:hover {
             filter: brightness(1.2);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
         }
         .neon-input:focus {
             border-color: #a855f7;
@@ -58,7 +78,7 @@
     <div class="max-w-7xl mx-auto bg-slate-900 neon-box rounded-xl p-6 shadow-2xl">
         
         <!-- Header -->
-        <div class="flex justify-between items-center mb-6 pb-4 border-b border-cyan-500/30">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
             <div>
                 <h1 class="text-2xl font-black tracking-wider uppercase neon-title">
                     ⚡ SYSTEM // ACCOUNT_MANAGER
@@ -67,26 +87,26 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <button onclick="openAddModal()" class="bg-gradient-to-r from-cyan-500 to-purple-500 text-slate-950 font-bold px-4 py-2 rounded text-sm neon-button flex items-center space-x-1 cursor-pointer">
+                <button onclick="openAddModal()" class="bg-gradient-to-r from-red-500 via-green-500 to-purple-500 text-slate-950 font-bold px-4 py-2 rounded text-sm neon-button flex items-center space-x-1 cursor-pointer">
                     <span class="text-lg leading-none">+</span> <span>THÊM ACC</span>
                 </button>
-                <button onclick="resetData()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-purple-500/50 px-4 py-2 rounded text-sm neon-button cursor-pointer">
+                <button onclick="resetData()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2 rounded text-sm neon-button cursor-pointer">
                     LÀM MỚI
                 </button>
             </div>
         </div>
         
         <!-- Thanh công cụ -->
-        <div class="flex justify-between items-center mb-6 bg-slate-950/80 p-3 rounded-lg border border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.1)]">
+        <div class="flex justify-between items-center mb-6 bg-slate-950/80 p-3 rounded-lg border border-slate-800 shadow-inner">
             <label class="flex items-center space-x-3 cursor-pointer select-none">
-                <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="w-4 h-4 bg-slate-900 border-cyan-500 text-cyan-500 rounded focus:ring-0 cursor-pointer">
+                <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="w-4 h-4 bg-slate-900 border-slate-700 text-cyan-500 rounded focus:ring-0 cursor-pointer">
                 <span class="text-xs font-semibold text-slate-300 tracking-wide uppercase">Ẩn các ngày đã xong trong tuần</span>
             </label>
-            <span class="text-xs text-purple-400">STATUS: RGB_NEON_ACTIVE</span>
+            <span class="text-xs neon-title font-bold">STATUS: 7_COLORS_RGB_ACTIVE</span>
         </div>
 
         <!-- Form thêm tài khoản -->
-        <div id="addAccountModal" class="hidden mb-6 p-4 bg-slate-950 border border-purple-500/60 rounded-lg shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+        <div id="addAccountModal" class="hidden mb-6 p-4 bg-slate-950 border border-purple-500/60 rounded-lg shadow-inner">
             <h3 class="font-bold text-purple-400 text-sm mb-3 tracking-wider uppercase">>> KẾT NỐI TÀI KHOẢN MỚI</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                 <input type="text" id="newAccountUser" placeholder="Tài khoản (Username / Email)" class="bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-600 p-2 rounded text-sm neon-input outline-none">
@@ -102,7 +122,7 @@
         <div class="overflow-x-auto">
             <table class="w-full border-collapse text-center text-sm">
                 <thead>
-                    <tr class="bg-slate-950 text-slate-300 text-xs border-b border-cyan-500/30">
+                    <tr class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800">
                         <th class="p-3 text-left">TÀI KHOẢN & MẬT KHẨU</th>
                         <th class="p-3 th-day" data-day="mon">THỨ 2</th>
                         <th class="p-3 th-day" data-day="tue">THỨ 3</th>
@@ -184,7 +204,7 @@
 
             accountsData.forEach((acc, index) => {
                 let rowHtml = `<tr class="hover:bg-slate-800/40 transition-all">
-                    <td class="p-3 text-left font-medium text-cyan-300">
+                    <td class="p-3 text-left font-medium text-slate-200">
                         <div class="text-xs"><span class="text-slate-500">ACC:</span> ${acc.username}</div>
                         <div class="text-xs"><span class="text-slate-500">PW:</span> <span class="tracking-widest">${acc.password}</span></div>
                     </td>`;
@@ -198,7 +218,7 @@
                         <td class="p-2 day-cell" data-day="${day}" ${displayStyle}>
                             <input type="checkbox" ${isChecked ? 'checked' : ''} 
                                 onchange="updateStatus(${index}, '${day}', this.checked)"
-                                class="w-5 h-5 bg-slate-950 border-cyan-500/60 text-cyan-500 rounded cursor-pointer accent-cyan-500 shadow-[0_0_5px_rgba(6,182,212,0.3)]">
+                                class="w-5 h-5 bg-slate-950 border-slate-700 text-cyan-500 rounded cursor-pointer accent-cyan-500 shadow-sm">
                         </td>
                     `;
                 });
@@ -208,7 +228,7 @@
                         <div class="flex items-center space-x-2">
                             <input type="checkbox" ${acc.weekly.checked ? 'checked' : ''} 
                                 onchange="updateWeeklyCheck(${index}, this.checked)"
-                                class="w-5 h-5 bg-slate-950 border-purple-500/60 text-purple-500 rounded cursor-pointer accent-purple-500 shadow-[0_0_5px_rgba(168,85,247,0.3)]" title="Weekly Check">
+                                class="w-5 h-5 bg-slate-950 border-slate-700 text-purple-500 rounded cursor-pointer accent-purple-500 shadow-sm" title="Weekly Check">
                             <input type="text" value="${acc.weekly.note || ''}" 
                                 onchange="updateWeeklyNote(${index}, this.value)"
                                 placeholder="Ghi chú weekly..." 
