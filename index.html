@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Cyber Edition</title>
+    <title>Gaming Account Manager - Google Sheets Style</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Hiệu ứng nền không gian Cyberpunk Grid & Glow */
         body {
             background-color: #030712;
             background-image: 
@@ -71,94 +70,61 @@
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); 
         }
 
-        /* Checkbox Gaming cao cấp */
+        /* Checkbox phong cách Sheets */
         .gaming-checkbox {
-            appearance: none; 
-            -webkit-appearance: none; 
-            width: 1.5rem; 
-            height: 1.5rem;
-            background-color: #0b0f19; 
-            border: 2px solid #374151; 
-            border-radius: 0.4rem;
-            cursor: pointer; 
-            position: relative; 
-            transition: all 0.25s ease-in-out; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);
+            appearance: none; -webkit-appearance: none; width: 1.4rem; height: 1.4rem;
+            background-color: #0b0f19; border: 2px solid #374151; border-radius: 0.3rem;
+            cursor: pointer; position: relative; transition: all 0.2s ease-in-out; box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);
         }
-        .gaming-checkbox:hover { 
-            border-color: #06b6d4; 
-            box-shadow: 0 0 12px rgba(6,182,212,0.6), inset 0 2px 4px rgba(0,0,0,0.9); 
-            transform: scale(1.08);
+        .gaming-checkbox:hover { border-color: #06b6d4; box-shadow: 0 0 10px rgba(6,182,212,0.6); }
+        .gaming-checkbox:checked { background: linear-gradient(135deg, #06b6d4, #a855f7); border-color: #38bdf8; box-shadow: 0 0 14px rgba(6,182,212,0.8); }
+        .gaming-checkbox:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #030712; font-size: 0.85rem; font-weight: 900; }
+        .gaming-checkbox.weekly-check:checked { background: linear-gradient(135deg, #ec4899, #8b5cf6); border-color: #f472b6; }
+
+        /* Các ô nhập liệu phong cách Google Sheets Cell */
+        .sheets-cell {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #cbd5e1;
+            padding: 6px 10px;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 13px;
+            transition: all 0.2s;
         }
-        .gaming-checkbox:checked { 
-            background: linear-gradient(135deg, #06b6d4, #a855f7); 
-            border-color: #38bdf8; 
-            box-shadow: 0 0 16px rgba(6,182,212,0.8), 0 0 25px rgba(168,85,247,0.5); 
-            animation: pulseCheck 0.3s ease;
+        .sheets-cell:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            background: rgba(30, 41, 59, 0.3);
         }
-        .gaming-checkbox:checked::after { 
-            content: '✓'; 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            color: #030712; 
-            font-size: 0.95rem; 
-            font-weight: 900; 
-        }
-        .gaming-checkbox.weekly-check:checked { 
-            background: linear-gradient(135deg, #ec4899, #8b5cf6); 
-            border-color: #f472b6; 
-            box-shadow: 0 0 16px rgba(236,72,153,0.8), 0 0 25px rgba(139,92,246,0.5); 
+        .sheets-cell:focus {
+            border-color: #06b6d4;
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+            outline: none;
         }
 
-        @keyframes pulseCheck {
-            0% { transform: scale(0.8); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
-
-        .neon-input:focus { 
-            border-color: #06b6d4; 
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4); 
-        }
-
-        /* Hiệu ứng hover từng dòng bảng */
-        .cyber-row {
-            transition: all 0.2s ease;
-        }
-        .cyber-row:hover {
-            background-color: rgba(30, 41, 59, 0.5);
-            box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.05);
-        }
+        .cyber-row:hover { background-color: rgba(30, 41, 59, 0.4); }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen p-4 md:p-8 font-mono">
     <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
         
-        <!-- Decorative Glow Accents -->
-        <div class="absolute -top-24 -right-24 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-5 border-b border-slate-800 gap-4 relative z-10">
             <div>
                 <div class="flex items-center space-x-2 mb-1">
-                    <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">Secure System Online</span>
+                    <span class="inline-block w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">Google Sheets Grid Active</span>
                 </div>
                 <h1 class="text-2xl md:text-3xl font-black tracking-wider uppercase neon-title">
-                    ⚡ GAMING // ACCOUNT_CORE
+                    ⚡ GAMING // SHEETS_CORE
                 </h1>
-                <p class="text-xs text-slate-400 mt-1">Hệ thống tự động hóa vòng lặp Daily & Weekly v2.5</p>
+                <p class="text-xs text-slate-400 mt-1">Chỉnh sửa trực tiếp trên ô (Inline Edit) + Tự động lưu trữ</p>
             </div>
             
             <div class="flex items-center space-x-3 flex-wrap gap-2">
-                <button onclick="openGithubModal()" class="neon-rgb-btn font-bold px-4 py-2.5 rounded-xl text-xs neon-title cursor-pointer flex items-center space-x-2 shadow-lg">
-                    <span>⚙️</span> <span>CẤU HÌNH GITHUB</span>
-                </button>
-                <button onclick="openAddModal()" class="neon-rgb-btn font-bold px-5 py-2.5 rounded-xl text-sm neon-title cursor-pointer flex items-center space-x-1 shadow-lg">
-                    <span class="text-lg leading-none">+</span> <span>THÊM TÀI KHOẢN</span>
+                <button onclick="addNewRow()" class="neon-rgb-btn font-bold px-5 py-2.5 rounded-xl text-sm neon-title cursor-pointer flex items-center space-x-1 shadow-lg">
+                    <span class="text-lg leading-none">+</span> <span>THÊM DÒNG MỚI</span>
                 </button>
             </div>
         </div>
@@ -169,52 +135,20 @@
                 <input type="checkbox" id="hideCompletedToggle" onchange="toggleHideCompleted()" class="gaming-checkbox">
                 <span class="text-xs font-semibold text-slate-300 group-hover:text-cyan-300 transition-colors tracking-wide uppercase">Ẩn các ngày đã xong trong tuần</span>
             </label>
-            <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
-                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                <span id="syncStatus" class="text-xs neon-title font-bold tracking-wider">STATUS: CONNECTING...</span>
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="saveStatus" class="text-xs text-emerald-400 font-bold tracking-wider">ALL CHANGES SAVED</span>
             </div>
         </div>
 
-        <!-- Modal Cấu hình GitHub Sync -->
-        <div id="githubModal" class="hidden mb-6 p-5 bg-slate-950/95 border border-cyan-500/60 rounded-xl shadow-2xl relative z-20 backdrop-blur-xl">
-            <h3 class="font-bold text-cyan-400 text-sm mb-2 tracking-wider uppercase flex items-center space-x-2">
-                <span>🛡️</span> <span>CẤU HÌNH GITHUB API CLOUD SYNC</span>
-            </h3>
-            <p class="text-xs text-slate-400 mb-4">Điền thông tin kho lưu trữ GitHub để đồng bộ tự động dữ liệu hai chiều giữa các thiết bị.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                <input type="text" id="ghOwner" placeholder="Tên tài khoản GitHub (Owner)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
-                <input type="text" id="ghRepo" placeholder="Tên Repository (VD: account-manager)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
-                <input type="text" id="ghPath" placeholder="Đường dẫn file (VD: data/accounts.json)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
-                <input type="password" id="ghToken" placeholder="GitHub Personal Access Token (PAT)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button onclick="closeGithubModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition-colors">ĐÓNG</button>
-                <button onclick="saveGithubConfig()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2 rounded-lg text-xs cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all">LƯU & KẾT NỐI</button>
-            </div>
-        </div>
-
-        <!-- Form thêm tài khoản -->
-        <div id="addAccountModal" class="hidden mb-6 p-5 bg-slate-950/95 border border-purple-500/60 rounded-xl shadow-2xl relative z-20 backdrop-blur-xl">
-            <h3 class="font-bold text-purple-400 text-sm mb-2 tracking-wider uppercase flex items-center space-x-2">
-                <span>➕</span> <span>KẾT NỐI TÀI KHOẢN MỚI VÀO HỆ THỐNG</span>
-            </h3>
-            <p class="text-xs text-slate-400 mb-4">Nhập thông tin đăng nhập để bắt đầu tự động hóa chuỗi nhiệm vụ.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                <input type="text" id="newAccountUser" placeholder="Tài khoản (Username / Email / ID)" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
-                <input type="text" id="newAccountPass" placeholder="Mật khẩu tài khoản" class="bg-slate-900/90 border border-slate-700 text-slate-200 placeholder-slate-500 p-2.5 rounded-lg text-sm neon-input outline-none">
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button onclick="closeAddModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition-colors">HỦY</button>
-                <button onclick="addNewAccount()" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-5 py-2 rounded-lg text-xs cursor-pointer shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all">XÁC NHẬN KẾT NỐI</button>
-            </div>
-        </div>
-
-        <!-- Bảng quản lý -->
+        <!-- Bảng dạng Google Sheets Grid -->
         <div class="overflow-x-auto rounded-xl border border-slate-800/80 shadow-2xl relative z-10">
             <table class="w-full border-collapse text-center text-sm">
                 <thead>
                     <tr class="bg-slate-950/90 text-slate-300 text-xs border-b border-slate-800 uppercase tracking-wider">
-                        <th class="p-4 text-left font-bold text-cyan-400">TÀI KHOẢN & MẬT KHẨU</th>
+                        <th class="p-3 w-12 text-center text-slate-500 font-normal">#</th>
+                        <th class="p-4 text-left font-bold text-cyan-400">TÀI KHOẢN (USERNAME)</th>
+                        <th class="p-4 text-left font-bold text-cyan-400">MẬT KHẨU (PASSWORD)</th>
                         <th class="p-3 th-day" data-day="mon">THỨ 2</th>
                         <th class="p-3 th-day" data-day="tue">THỨ 3</th>
                         <th class="p-3 th-day" data-day="wed">THỨ 4</th>
@@ -222,7 +156,8 @@
                         <th class="p-3 th-day" data-day="fri">THỨ 6</th>
                         <th class="p-3 th-day" data-day="sat">THỨ 7</th>
                         <th class="p-3 th-day" data-day="sun">CHỦ NHẬT</th>
-                        <th class="p-4 text-left pl-6 font-bold text-purple-400">WEEKLY (CHECK & NOTE)</th>
+                        <th class="p-4 text-left pl-6 font-bold text-purple-400">WEEKLY NOTE & CHECK</th>
+                        <th class="p-3 text-center text-slate-500">XÓA</th>
                     </tr>
                 </thead>
                 <tbody id="account-table-body" class="divide-y divide-slate-800/50 bg-slate-900/40">
@@ -233,7 +168,7 @@
 
         <!-- Footer Info -->
         <div class="mt-6 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2 relative z-10">
-            <span>🛡️ Tự động reset trạng thái Daily vào Thứ Hai hàng tuần.</span>
+            <span>💡 Mẹo: Bấm trực tiếp vào các ô chữ để sửa đổi tên tài khoản, mật khẩu hoặc ghi chú. Dữ liệu tự động lưu!</span>
             <button onclick="resetData()" class="text-red-400 hover:text-red-300 font-bold transition-colors cursor-pointer bg-red-950/30 px-3 py-1 rounded border border-red-500/20">
                 ⚠️ Khôi phục dữ liệu gốc
             </button>
@@ -250,7 +185,10 @@
             return d.getUTCFullYear() + '-W' + weekNo;
         }
 
-        let accountsData = JSON.parse(localStorage.getItem('gaming_accounts')) || [
+        let currentWeek = getWeekNumber(new Date());
+        let savedWeek = localStorage.getItem('sheets_current_week');
+
+        let accountsData = JSON.parse(localStorage.getItem('sheets_accounts')) || [
             {
                 id: 1,
                 username: "user_01",
@@ -260,129 +198,25 @@
             }
         ];
 
+        if (savedWeek !== currentWeek) {
+            accountsData.forEach(acc => {
+                if (acc.days) Object.keys(acc.days).forEach(day => acc.days[day] = false);
+                if (acc.weekly) acc.weekly.checked = false;
+            });
+            localStorage.setItem('sheets_current_week', currentWeek);
+            localStorage.setItem('sheets_accounts', JSON.stringify(accountsData));
+        }
+
         let hideCompleted = false;
         const daysList = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
-        function getGhConfig() {
-            return {
-                owner: localStorage.getItem('gh_owner') || '',
-                repo: localStorage.getItem('gh_repo') || '',
-                path: localStorage.getItem('gh_path') || 'data/accounts.json',
-                token: localStorage.getItem('gh_token') || ''
-            };
-        }
-
-        function openGithubModal() {
-            const cfg = getGhConfig();
-            document.getElementById('ghOwner').value = cfg.owner;
-            document.getElementById('ghRepo').value = cfg.repo;
-            document.getElementById('ghPath').value = cfg.path;
-            document.getElementById('ghToken').value = cfg.token;
-            document.getElementById('githubModal').classList.remove('hidden');
-        }
-
-        function closeGithubModal() {
-            document.getElementById('githubModal').classList.add('hidden');
-        }
-
-        function saveGithubConfig() {
-            localStorage.setItem('gh_owner', document.getElementById('ghOwner').value.trim());
-            localStorage.setItem('gh_repo', document.getElementById('ghRepo').value.trim());
-            localStorage.setItem('gh_path', document.getElementById('ghPath').value.trim());
-            localStorage.setItem('gh_token', document.getElementById('ghToken').value.trim());
-            closeGithubModal();
-            initCloudSync();
-        }
-
-        async function fetchFromCloud() {
-            const cfg = getGhConfig();
-            const statusEl = document.getElementById('syncStatus');
-
-            if (!cfg.owner || !cfg.repo || !cfg.token) {
-                statusEl.innerText = "STATUS: LOCAL_MODE (Chưa cấu hình GitHub)";
-                return;
-            }
-
-            statusEl.innerText = "STATUS: SYNCING...";
-            try {
-                const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
-                const res = await fetch(url, {
-                    headers: { 'Authorization': `token ${cfg.token}` }
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    const decodedContent = decodeURIComponent(escape(atob(data.content)));
-                    accountsData = JSON.parse(decodedContent);
-                    
-                    let currentWeek = getWeekNumber(new Date());
-                    let savedWeek = localStorage.getItem('gaming_current_week');
-                    if (savedWeek !== currentWeek) {
-                        accountsData.forEach(acc => {
-                            if (acc.days) Object.keys(acc.days).forEach(day => acc.days[day] = false);
-                            if (acc.weekly) acc.weekly.checked = false;
-                        });
-                        localStorage.setItem('gaming_current_week', currentWeek);
-                    }
-
-                    localStorage.setItem('gaming_accounts', JSON.stringify(accountsData));
-                    renderTable();
-                    statusEl.innerText = "STATUS: CLOUD_SYNCED ✅";
-                } else {
-                    statusEl.innerText = "STATUS: SYNC_FAILED ❌";
-                }
-            } catch (err) {
-                console.error(err);
-                statusEl.innerText = "STATUS: OFFLINE_MODE";
-            }
-        }
-
-        async function pushToCloud() {
-            const cfg = getGhConfig();
-            if (!cfg.owner || !cfg.repo || !cfg.token) return;
-
-            const statusEl = document.getElementById('syncStatus');
-            statusEl.innerText = "STATUS: SAVING...";
-
-            try {
-                const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
-                let sha = '';
-                const getRes = await fetch(url, {
-                    headers: { 'Authorization': `token ${cfg.token}` }
-                });
-                if (getRes.ok) {
-                    const fileData = await getRes.json();
-                    sha = fileData.sha;
-                }
-
-                const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(accountsData, null, 2))));
-                const putRes = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${cfg.token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: "Auto-sync account manager data",
-                        content: contentEncoded,
-                        sha: sha ? sha : undefined
-                    })
-                });
-
-                if (putRes.ok) {
-                    statusEl.innerText = "STATUS: CLOUD_SYNCED ✅";
-                } else {
-                    statusEl.innerText = "STATUS: SAVE_FAILED ❌";
-                }
-            } catch (err) {
-                console.error(err);
-                statusEl.innerText = "STATUS: NETWORK_ERROR";
-            }
-        }
-
-        function saveDataAndSync() {
-            localStorage.setItem('gaming_accounts', JSON.stringify(accountsData));
-            pushToCloud();
+        function saveToStorage() {
+            localStorage.setItem('sheets_accounts', JSON.stringify(accountsData));
+            const statusEl = document.getElementById('saveStatus');
+            statusEl.innerText = "SAVING...";
+            setTimeout(() => {
+                statusEl.innerText = "ALL CHANGES SAVED";
+            }, 400);
         }
 
         function renderTable() {
@@ -403,13 +237,20 @@
 
             accountsData.forEach((acc, index) => {
                 let rowHtml = `<tr class="cyber-row">
-                    <td class="p-4 text-left font-medium text-slate-200">
-                        <div class="text-xs font-bold text-cyan-300 flex items-center space-x-1">
-                            <span class="text-slate-500">ACC:</span> <span>${acc.username}</span>
-                        </div>
-                        <div class="text-xs text-slate-400 mt-0.5 flex items-center space-x-1">
-                            <span class="text-slate-500">PW:</span> <span class="tracking-widest text-slate-300">${acc.password}</span>
-                        </div>
+                    <td class="p-3 text-center text-xs text-slate-500 font-mono">${index + 1}</td>
+                    
+                    <!-- Ô sửa trực tiếp Username -->
+                    <td class="p-2 text-left">
+                        <input type="text" value="${acc.username}" 
+                            oninput="updateCellData(${index}, 'username', this.value)" 
+                            class="sheets-cell font-bold text-cyan-300" placeholder="Nhập tài khoản...">
+                    </td>
+
+                    <!-- Ô sửa trực tiếp Password -->
+                    <td class="p-2 text-left">
+                        <input type="text" value="${acc.password}" 
+                            oninput="updateCellData(${index}, 'password', this.value)" 
+                            class="sheets-cell tracking-widest text-slate-300" placeholder="Nhập mật khẩu...">
                     </td>`;
 
                 daysList.forEach(day => {
@@ -418,7 +259,7 @@
                     const displayStyle = isHidden ? 'style="display: none;"' : '';
                     
                     rowHtml += `
-                        <td class="p-3 day-cell" data-day="${day}" ${displayStyle}>
+                        <td class="p-3 day-cell text-center" data-day="${day}" ${displayStyle}>
                             <input type="checkbox" ${isChecked ? 'checked' : ''} 
                                 onchange="updateStatus(${index}, '${day}', this.checked)"
                                 class="gaming-checkbox">
@@ -427,16 +268,20 @@
                 });
 
                 rowHtml += `
-                    <td class="p-3 text-left pl-6">
-                        <div class="flex items-center space-x-3">
+                    <td class="p-2 text-left pl-4">
+                        <div class="flex items-center space-x-2">
                             <input type="checkbox" ${acc.weekly.checked ? 'checked' : ''} 
                                 onchange="updateWeeklyCheck(${index}, this.checked)"
                                 class="gaming-checkbox weekly-check" title="Weekly Check">
                             <input type="text" value="${acc.weekly.note || ''}" 
-                                onchange="updateWeeklyNote(${index}, this.value)"
-                                placeholder="Nhập ghi chú weekly..." 
-                                class="bg-slate-950/80 border border-slate-700 text-slate-200 placeholder-slate-600 px-3 py-2 text-xs rounded-lg w-full neon-input outline-none transition-all">
+                                oninput="updateWeeklyNote(${index}, this.value)"
+                                placeholder="Ghi chú weekly..." 
+                                class="sheets-cell text-xs text-purple-300">
                         </div>
+                    </td>
+
+                    <td class="p-3 text-center">
+                        <button onclick="deleteRow(${index})" class="text-slate-600 hover:text-red-400 transition-colors p-1 rounded cursor-pointer font-bold" title="Xóa dòng">✕</button>
                     </td>
                 `;
 
@@ -445,20 +290,51 @@
             });
         }
 
+        // Cập nhật dữ liệu khi người dùng gõ sửa trực tiếp trên ô
+        function updateCellData(index, field, value) {
+            accountsData[index][field] = value;
+            saveToStorage();
+        }
+
         function updateStatus(accountIndex, day, status) {
             accountsData[accountIndex].days[day] = status;
-            saveDataAndSync();
+            saveToStorage();
             renderTable();
         }
 
         function updateWeeklyCheck(accountIndex, status) {
             accountsData[accountIndex].weekly.checked = status;
-            saveDataAndSync();
+            saveToStorage();
         }
 
         function updateWeeklyNote(accountIndex, noteText) {
             accountsData[accountIndex].weekly.note = noteText;
-            saveDataAndSync();
+            saveToStorage();
+        }
+
+        function addNewRow() {
+            const newAcc = {
+                id: Date.now(),
+                username: `account_${accountsData.length + 1}`,
+                password: "password_xyz",
+                days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
+                weekly: { checked: false, note: "" }
+            };
+            accountsData.push(newAcc);
+            saveToStorage();
+            renderTable();
+        }
+
+        function deleteRow(index) {
+            if (accountsData.length <= 1) {
+                alert('Cần giữ lại ít nhất một dòng tài khoản!');
+                return;
+            }
+            if (confirm('Bạn có chắc chắn muốn xóa dòng tài khoản này không?')) {
+                accountsData.splice(index, 1);
+                saveToStorage();
+                renderTable();
+            }
         }
 
         function toggleHideCompleted() {
@@ -466,53 +342,15 @@
             renderTable();
         }
 
-        function openAddModal() {
-            document.getElementById('addAccountModal').classList.remove('hidden');
-        }
-
-        function closeAddModal() {
-            document.getElementById('addAccountModal').classList.add('hidden');
-            document.getElementById('newAccountUser').value = '';
-            document.getElementById('newAccountPass').value = '';
-        }
-
-        function addNewAccount() {
-            const username = document.getElementById('newAccountUser').value.trim();
-            const password = document.getElementById('newAccountPass').value.trim();
-
-            if (!username) {
-                alert('Vui lòng nhập tài khoản!');
-                return;
-            }
-
-            const newAcc = {
-                id: Date.now(),
-                username: username,
-                password: password || 'N/A',
-                days: { mon: false, tue: false, wed: false, thu: false, fri: false, sat: false, sun: false },
-                weekly: { checked: false, note: '' }
-            };
-
-            accountsData.push(newAcc);
-            saveDataAndSync();
-            closeAddModal();
-            renderTable();
-        }
-
         function resetData() {
-            if (confirm('Bạn có muốn xóa sạch và tải lại dữ liệu mặc định không?')) {
-                localStorage.removeItem('gaming_accounts');
-                localStorage.removeItem('gaming_current_week');
+            if (confirm('Bạn có muốn khôi phục lại dữ liệu mặc định không?')) {
+                localStorage.removeItem('sheets_accounts');
+                localStorage.removeItem('sheets_current_week');
                 location.reload();
             }
         }
 
-        async function initCloudSync() {
-            renderTable();
-            await fetchFromCloud();
-        }
-
-        initCloudSync();
+        renderTable();
     </script>
 </body>
 </html>
