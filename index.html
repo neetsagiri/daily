@@ -3,257 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming // Auto-Sheets Sync</title>
+    <title>Gaming Account Manager - Auto Sheets Sync</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        :root {
-            --bg-color: #0b0f19;
-            --panel-bg: #111827;
-            --border-color: #1f293d;
-            --accent-color: #00f0ff;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-        }
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
+            background-color: #030712;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+        @keyframes rgb7ColorsBox {
+            0% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
+            50% { border-color: rgba(6, 182, 212, 0.7); box-shadow: 0 0 25px rgba(6, 182, 212, 0.3); }
+            100% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .title h1 {
-            margin: 0;
-            font-size: 22px;
-            color: var(--accent-color);
-            letter-spacing: 1px;
-        }
-        .title p {
-            margin: 5px 0 0 0;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-        .btn {
-            background: #1f293d;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        .btn:hover { background: #374151; }
-        .btn-primary { background: #00f0ff; color: #000; border: none; }
-        .btn-primary:hover { background: #00bfff; }
+
+        .neon-box { border: 2px solid; animation: rgb7ColorsBox 10s infinite linear; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(12px); }
         
-        .status-bar {
-            background: #070a10;
-            border: 1px solid var(--border-color);
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: #00ff66;
-            margin-bottom: 20px;
-            font-family: monospace;
+        .gaming-checkbox {
+            appearance: none; -webkit-appearance: none; width: 1.4rem; height: 1.4rem;
+            background-color: #0b0f19; border: 2px solid #374151; border-radius: 0.3rem;
+            cursor: pointer; position: relative; transition: all 0.2s ease-in-out;
         }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 14px;
+        .gaming-checkbox:checked { background: linear-gradient(135deg, #06b6d4, #a855f7); border-color: #38bdf8; box-shadow: 0 0 10px rgba(6,182,212,0.8); }
+        .gaming-checkbox:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #030712; font-size: 0.85rem; font-weight: 900; }
+
+        .sheets-cell {
+            background: transparent; border: 1px solid transparent; color: #cbd5e1; padding: 6px 10px; border-radius: 4px; width: 100%; font-size: 13px;
         }
-        th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        th {
-            color: var(--text-muted);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        input[type="text"] {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-main);
-            width: 100%;
-            padding: 6px;
-            border-radius: 4px;
-        }
-        input[type="text"]:focus {
-            background: #1a233a;
-            border-color: var(--accent-color);
-            outline: none;
-        }
-        input[type="checkbox"] {
-            transform: scale(1.2);
-            cursor: pointer;
-            accent-color: var(--accent-color);
-        }
-        .text-center { text-align: center; }
-        .delete-btn {
-            color: #ef4444;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: 16px;
-        }
-        .delete-btn:hover { color: #dc2626; }
+        .sheets-cell:focus { border-color: #06b6d4; background: rgba(15, 23, 42, 0.95); outline: none; }
     </style>
 </head>
-<body>
-
-<div class="container">
-    <div class="header">
-        <div class="title">
-            <h1>⚡ GAMING // AUTO-SHEETS SYNC</h1>
-            <p>Đồng bộ 2 chiều thời gian thực & Tự động làm mới ngầm</p>
+<body class="text-slate-100 min-h-screen p-4 md:p-8 font-mono">
+    <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-6 shadow-2xl">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+            <div>
+                <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400">⚡ GAMING // AUTO-SHEETS SYNC</h1>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động làm mới ngầm</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="fetchSheetData(false)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-4 py-2 rounded text-xs font-bold cursor-pointer">📥 TẢI LẠI</button>
+                <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer">+ THÊM DÒNG</button>
+            </div>
         </div>
-        <div>
-            <button class="btn" onclick="loadData()">🔄 Tải lại</button>
-            <button class="btn btn-primary" onclick="addRow()">+ Thêm dòng</button>
+
+        <div class="flex justify-between items-center mb-4 bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+            <span id="syncStatus" class="text-xs text-emerald-400 font-bold">STATUS: ĐÃ KẾT NỐI GOOGLE SHEETS</span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full border-collapse text-center text-sm">
+                <thead>
+                    <tr class="bg-slate-950 text-slate-300 text-xs border-b border-slate-800 uppercase">
+                        <th class="p-3 w-12 text-slate-500">STT</th>
+                        <th class="p-3 text-left">TÀI KHOẢN (USERNAME)</th>
+                        <th class="p-3 text-left">MẬT KHẨU (PASSWORD)</th>
+                        <th class="p-3">THỨ 2</th>
+                        <th class="p-3">THỨ 3</th>
+                        <th class="p-3">THỨ 4</th>
+                        <th class="p-3">THỨ 5</th>
+                        <th class="p-3">THỨ 6</th>
+                        <th class="p-3">THỨ 7</th>
+                        <th class="p-3">CHỦ NHẬT</th>
+                        <th class="p-3">CỬA TUẦN</th>
+                        <th class="p-3 text-left pl-4">GHI CHÚ</th>
+                        <th class="p-3">XÓA</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body" class="divide-y divide-slate-800/50">
+                    <!-- Dữ liệu load từ Sheets -->
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div id="status" class="status-bar">STATUS: SẴN SÀNG</div>
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRDSw4ROjr6wpkBCMG46PaCAWyeC1LkFydQFszx3x-Lb_s_iFoKiicxvbmsDNxUGcA/exec";
 
-    <div style="overflow-x: auto;">
-        <table>
-            <thead>
-                <tr>
-                    <th width="50">STT</th>
-                    <th>TÀI KHOẢN (USERNAME)</th>
-                    <th>MẬT KHẨU (PASSWORD)</th>
-                    <th class="text-center">THỨ 2</th>
-                    <th class="text-center">THỨ 3</th>
-                    <th class="text-center">THỨ 4</th>
-                    <th class="text-center">THỨ 5</th>
-                    <th class="text-center">THỨ 6</th>
-                    <th class="text-center">THỨ 7</th>
-                    <th class="text-center">CHỦ NHẬT</th>
-                    <th class="text-center">CẢ TUẦN</th>
-                    <th>GHI CHÚ</th>
-                    <th width="50" class="text-center">XÓA</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                <!-- Dữ liệu được render bằng JavaScript -->
-            </tbody>
-        </table>
-    </div>
-</div>
+        let accounts = [];
+        let isEditing = false;
 
-<script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxhBr9rviSra4no0UH_0-51w95PuphEqSkIosIwcIlt1UFw9NlV-TNPmGceke3hlBu-/exec";
-    let tableData = [];
-    let saveTimeout = null;
+        async function fetchSheetData(isAuto = false) {
+            if (isAuto && isEditing) return;
 
-    async function loadData() {
-        setStatus("ĐANG TẢI DỮ LIỆU TỪ GOOGLE SHEETS...", "#00f0ff");
-        try {
-            let response = await fetch(SCRIPT_URL);
-            tableData = await response.json();
-            renderTable();
-            setStatus("ĐÃ ĐỒNG BỘ THÀNH CÔNG", "#00ff66");
-        } catch (error) {
-            console.error(error);
-            setStatus("LỖI KHI TẢI DỮ LIỆU!", "#ef4444");
+            if (!isAuto) {
+                document.getElementById('syncStatus').innerText = "STATUS: ĐANG TẢI DỮ LIỆU TỪ GOOGLE SHEETS...";
+            }
+
+            try {
+                let res = await fetch(SCRIPT_URL);
+                let newData = await res.json();
+                
+                if (JSON.stringify(accounts) !== JSON.stringify(newData)) {
+                    accounts = newData;
+                    renderTable();
+                }
+
+                document.getElementById('syncStatus').innerText = "STATUS: AUTO-SYNC ĐANG CHẠY 🟢";
+            } catch (err) {
+                console.error(err);
+                if (!isAuto) {
+                    document.getElementById('syncStatus').innerText = "STATUS: LỖI KHI TẢI DỮ LIỆU! ❌";
+                }
+            }
         }
-    }
 
-    function renderTable() {
-        const tbody = document.getElementById("table-body");
-        tbody.innerHTML = "";
-        
-        tableData.forEach((row, index) => {
-            let tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td><input type="text" value="${row["Tài khoản"] || ""}" oninput="updateData(${index}, 'Tài khoản', this.value)"></td>
-                <td><input type="text" value="${row["Mật khẩu"] || ""}" oninput="updateData(${index}, 'Mật khẩu', this.value)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Thứ 2"] === true || row["Thứ 2"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Thứ 2', this.checked)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Thứ 3"] === true || row["Thứ 3"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Thứ 3', this.checked)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Thứ 4"] === true || row["Thứ 4"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Thứ 4', this.checked)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Thứ 5"] === true || row["Thứ 5"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Thứ 5', this.checked)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Thứ 6"] === true || row["Thứ 6"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Thứ 6', this.checked)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Thứ 7"] === true || row["Thứ 7"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Thứ 7', this.checked)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Chủ Nhật"] === true || row["Chủ Nhật"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Chủ Nhật', this.checked)"></td>
-                <td class="text-center"><input type="checkbox" ${row["Cả tuần"] === true || row["Cả tuần"] === "TRUE" ? "checked" : ""} onchange="updateData(${index}, 'Cả tuần', this.checked)"></td>
-                <td><input type="text" value="${row["Ghi chú"] || ""}" oninput="updateData(${index}, 'Ghi chú', this.value)"></td>
-                <td class="text-center"><button class="delete-btn" onclick="deleteRow(${index})">✕</button></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+        async function saveToSheet() {
+            document.getElementById('syncStatus').innerText = "STATUS: ĐANG LƯU LÊN GOOGLE SHEETS...";
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(accounts)
+                });
+                document.getElementById('syncStatus').innerText = "STATUS: ĐÃ LƯU THÀNH CÔNG ✅";
+            } catch (err) {
+                console.error(err);
+                document.getElementById('syncStatus').innerText = "STATUS: LƯU THẤT BẠI ❌";
+            }
+        }
 
-    function updateData(index, field, value) {
-        tableData[index][field] = value;
-        
-        setStatus("ĐANG THAY ĐỔI...", "#fbbf24");
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
-            syncToServer();
-        }, 1000);
-    }
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
 
-    function addRow() {
-        tableData.push({
-            "Tài khoản": "", "Mật khẩu": "",
-            "Thứ 2": false, "Thứ 3": false, "Thứ 4": false, "Thứ 5": false, "Thứ 6": false, "Thứ 7": false, "Chủ Nhật": false, "Cả tuần": false,
-            "Ghi chú": ""
-        });
-        renderTable();
-        syncToServer();
-    }
+            accounts.forEach((item, index) => {
+                let rowHtml = `<tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-xs text-slate-500">${index + 1}</td>
+                    <td class="p-2 text-left">
+                        <input type="text" value="${item.username || ''}" 
+                            onfocus="isEditing=true" onblur="isEditing=false"
+                            oninput="accounts[${index}].username = this.value; saveToSheet();" 
+                            class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
+                    </td>
+                    <td class="p-2 text-left">
+                        <input type="text" value="${item.password || ''}" 
+                            onfocus="isEditing=true" onblur="isEditing=false"
+                            oninput="accounts[${index}].password = this.value; saveToSheet();" 
+                            class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
+                    </td>`;
 
-    function deleteRow(index) {
-        tableData.splice(index, 1);
-        renderTable();
-        syncToServer();
-    }
+                const days = ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'];
+                days.forEach(day => {
+                    let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
+                    rowHtml += `<td class="p-2 text-center">
+                        <input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; saveToSheet();" class="gaming-checkbox">
+                    </td>`;
+                });
 
-    async function syncToServer() {
-        setStatus("ĐANG LƯU LÊN GOOGLE SHEETS...", "#00f0ff");
-        try {
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(tableData)
+                rowHtml += `<td class="p-2 text-left pl-4">
+                        <input type="text" value="${item.note || ''}" 
+                            onfocus="isEditing=true" onblur="isEditing=false"
+                            oninput="accounts[${index}].note = this.value; saveToSheet();" 
+                            class="sheets-cell text-purple-300" placeholder="Ghi chú...">
+                    </td>
+                    <td class="p-2 text-center">
+                        <button onclick="accounts.splice(${index}, 1); renderTable(); saveToSheet();" class="text-slate-600 hover:text-red-400 font-bold p-1 cursor-pointer">✕</button>
+                    </td>
+                </tr>`;
+                tbody.innerHTML += rowHtml;
             });
-            setStatus("ĐÃ LƯU THÀNH CÔNG VÀO GOOGLE SHEETS!", "#00ff66");
-        } catch (error) {
-            console.error(error);
-            setStatus("LỖI KHI LƯU DỮ LIỆU!", "#ef4444");
         }
-    }
 
-    function setStatus(text, color) {
-        const statusEl = document.getElementById("status");
-        statusEl.innerText = "STATUS: " + text;
-        statusEl.style.color = color;
-    }
+        function addNewRow() {
+            accounts.push({
+                stt: accounts.length + 1,
+                username: "",
+                password: "",
+                thu2: false, thu3: false, thu4: false, thu5: false, thu6: false, thu7: false, cn: false, cua: false,
+                note: ""
+            });
+            renderTable();
+            saveToSheet();
+        }
 
-    loadData();
-    setInterval(loadData, 10000);
-</script>
+        fetchSheetData(false);
 
+        setInterval(() => {
+            fetchSheetData(true);
+        }, 7000);
+    </script>
 </body>
 </html>
