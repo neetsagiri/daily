@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Split Columns</title>
+    <title>Gaming Account Manager - Sheets Live Sync</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -42,11 +42,11 @@
     <div class="max-w-7xl mx-auto bg-slate-900/90 neon-box rounded-2xl p-6 shadow-2xl">
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
             <div>
-                <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400">⚡ GAMING // SHEETS SYNC</h1>
-                <p class="text-xs text-slate-400 mt-1">Quản lý Tài khoản & Mật khẩu riêng biệt - Đồng bộ thời gian thực</p>
+                <h1 class="text-2xl font-black tracking-wider uppercase text-cyan-400">⚡ GAMING // AUTO-SHEETS SYNC</h1>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ 2 chiều thời gian thực & Tự động làm mới ngầm</p>
             </div>
             <div class="flex items-center space-x-3">
-                <button onclick="fetchSheetData()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-4 py-2 rounded text-xs font-bold cursor-pointer">📥 TẢI LẠI</button>
+                <button onclick="fetchSheetData(false)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 px-4 py-2 rounded text-xs font-bold cursor-pointer">📥 TẢI LẠI</button>
                 <button onclick="addNewRow()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded text-xs cursor-pointer">+ THÊM DÒNG</button>
             </div>
         </div>
@@ -85,17 +85,30 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ_wv_kwlTxqZC2AXvuC44hcWdcjVB_otmFFteyY6vA2ME-PDiEeYT_bXvwtZu94Gb/exec";
 
         let accounts = [];
+        let isEditing = false;
 
-        async function fetchSheetData() {
-            document.getElementById('syncStatus').innerText = "STATUS: ĐANG TẢI DỮ LIỆU TỪ GOOGLE SHEETS...";
+        async function fetchSheetData(isAuto = false) {
+            if (isAuto && isEditing) return;
+
+            if (!isAuto) {
+                document.getElementById('syncStatus').innerText = "STATUS: ĐANG TẢI DỮ LIỆU TỪ GOOGLE SHEETS...";
+            }
+
             try {
                 let res = await fetch(SCRIPT_URL);
-                accounts = await res.json();
-                renderTable();
-                document.getElementById('syncStatus').innerText = "STATUS: ĐÃ ĐỒNG BỘ XONG ✅";
+                let newData = await res.json();
+                
+                if (JSON.stringify(accounts) !== JSON.stringify(newData)) {
+                    accounts = newData;
+                    renderTable();
+                }
+
+                document.getElementById('syncStatus').innerText = "STATUS: AUTO-SYNC ĐANG CHẠY 🟢";
             } catch (err) {
                 console.error(err);
-                document.getElementById('syncStatus').innerText = "STATUS: LỖI KẾT NỐI ❌";
+                if (!isAuto) {
+                    document.getElementById('syncStatus').innerText = "STATUS: LỖI KẾT NỐI ❌";
+                }
             }
         }
 
@@ -123,24 +136,33 @@
                 let rowHtml = `<tr class="hover:bg-slate-800/40">
                     <td class="p-3 text-xs text-slate-500">${index + 1}</td>
                     <td class="p-2 text-left">
-                        <input type="text" value="${item.username || ''}" oninput="accounts[${index}].username = this.value; saveToSheet();" class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
+                        <input type="text" value="${item.username || ''}" 
+                            onfocus="isEditing=true" onblur="isEditing=false"
+                            oninput="accounts[${index}].username = this.value; saveToSheet();" 
+                            class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
                     </td>
                     <td class="p-2 text-left">
-                        <input type="text" value="${item.password || ''}" oninput="accounts[${index}].password = this.value; saveToSheet();" class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
+                        <input type="text" value="${item.password || ''}" 
+                            onfocus="isEditing=true" onblur="isEditing=false"
+                            oninput="accounts[${index}].password = this.value; saveToSheet();" 
+                            class="sheets-cell text-amber-300" placeholder="Mật khẩu...">
                     </td>`;
 
                 ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'].forEach(day => {
-                    let checked = item[day] ? 'checked' : '';
+                    let checked = (item[day] === true || item[day] === "TRUE" || item[day] === true) ? 'checked' : '';
                     rowHtml += `<td class="p-2 text-center">
                         <input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; saveToSheet();" class="gaming-checkbox">
                     </td>`;
                 });
 
                 rowHtml += `<td class="p-2 text-left pl-4">
-                        <input type="text" value="${item.note || ''}" oninput="accounts[${index}].note = this.value; saveToSheet();" class="sheets-cell text-purple-300" placeholder="Ghi chú...">
+                        <input type="text" value="${item.note || ''}" 
+                            onfocus="isEditing=true" onblur="isEditing=false"
+                            oninput="accounts[${index}].note = this.value; saveToSheet();" 
+                            class="sheets-cell text-purple-300" placeholder="Ghi chú...">
                     </td>
                     <td class="p-2 text-center">
-                        <button onclick="accounts.splice(${index}, 1); renderTable(); saveToSheet();" class="text-slate-600 hover:text-red-400 font-bold p-1">✕</button>
+                        <button onclick="accounts.splice(${index}, 1); renderTable(); saveToSheet();" class="text-slate-600 hover:text-red-400 font-bold p-1 cursor-pointer">✕</button>
                     </td>
                 </tr>`;
                 tbody.innerHTML += rowHtml;
@@ -159,7 +181,11 @@
             saveToSheet();
         }
 
-        fetchSheetData();
+        fetchSheetData(false);
+
+        setInterval(() => {
+            fetchSheetData(true);
+        }, 7000);
     </script>
 </body>
 </html>
