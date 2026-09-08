@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Account Manager - Confirm Delete</title>
+    <title>Gaming Account Manager - Perfect Copy Feedback</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -207,7 +207,7 @@
         let accounts = [];
         let isMobileView = window.innerWidth < 768;
         let syncTimer = null;
-        let pendingDeleteIndex = null; // Lưu vị trí dòng chuẩn bị xóa
+        let pendingDeleteIndex = null;
 
         function setSyncStatus(status) {
             const dot = document.getElementById('statusDot');
@@ -239,25 +239,61 @@
             setTimeout(() => toast.remove(), 2500);
         }
 
-        function copyText(text, label, btnElement) {
+        // Hàm copy trực tiếp từ giá trị mảng dữ liệu theo index và hiện thông báo chuẩn xác
+        function copyDataValue(index, field, label, btnElement) {
+            const text = accounts[index] ? accounts[index][field] : '';
             if (!text) {
                 showToast(`⚠️ Không có ${label} để sao chép!`, 'error');
                 return;
             }
-            navigator.clipboard.writeText(text).then(() => {
-                showToast(`📋 Đã sao chép ${label}`, 'success');
-                if (btnElement) {
-                    let originalHTML = btnElement.innerHTML;
-                    btnElement.innerHTML = '✓ Đã chép';
-                    btnElement.classList.add('copied');
-                    setTimeout(() => {
-                        btnElement.innerHTML = originalHTML;
-                        btnElement.classList.remove('copied');
-                    }, 1500);
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    handleCopySuccess(label, btnElement);
+                }).catch(() => {
+                    fallbackCopyText(text, label, btnElement);
+                });
+            } else {
+                fallbackCopyText(text, label, btnElement);
+            }
+        }
+
+        function fallbackCopyText(text, label, btnElement) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    handleCopySuccess(label, btnElement);
+                } else {
+                    showToast(`❌ Không thể sao chép ${label}!`, 'error');
                 }
-            }).catch(err => {
+            } catch (err) {
                 showToast(`❌ Lỗi sao chép!`, 'error');
-            });
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function handleCopySuccess(label, btnElement) {
+            showToast(`📋 Đã sao chép ${label}`, 'success');
+            if (btnElement) {
+                let originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = '✓ Đã chép';
+                btnElement.classList.add('copied');
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHTML;
+                    btnElement.classList.remove('copied');
+                }, 1500);
+            }
         }
 
         function updateProgress() {
@@ -319,7 +355,6 @@
             }
         }
 
-        // Quản lý Modal Thêm mới
         function openModal() {
             document.getElementById('inputUser').value = '';
             document.getElementById('inputPass').value = '';
@@ -331,7 +366,6 @@
             document.getElementById('addModal').classList.add('hidden');
         }
 
-        // Quản lý Modal Xóa dòng
         function promptDelete(index) {
             pendingDeleteIndex = index;
             document.getElementById('deleteModal').classList.remove('hidden');
@@ -404,21 +438,18 @@
                             <tbody class="divide-y divide-slate-800/50 font-medium">`;
 
                 accounts.forEach((item, index) => {
-                    let safeUser = (item.username || '').replace(/'/g, "\\'");
-                    let safePass = (item.password || '').replace(/'/g, "\\'");
-
                     tableHtml += `<tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="p-3.5 text-xs font-bold text-slate-500">${index + 1}</td>
                         <td class="p-2.5 text-left">
                             <div class="flex items-center gap-2">
                                 <input type="text" value="${item.username || ''}" oninput="accounts[${index}].username = this.value; triggerAutoSync();" class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
-                                <button onclick="copyText('${safeUser}', 'Tài khoản', this)" class="copy-btn text-xs px-2.5 py-1.5" title="Sao chép">📋 Copy</button>
+                                <button onclick="copyDataValue(${index}, 'username', 'Tài khoản', this)" class="copy-btn text-xs px-2.5 py-1.5" title="Sao chép">📋 Copy</button>
                             </div>
                         </td>
                         <td class="p-2.5 text-left">
                             <div class="flex items-center gap-2">
                                 <input type="text" value="${item.password || ''}" oninput="accounts[${index}].password = this.value; triggerAutoSync();" class="sheets-cell text-amber-300 font-bold" placeholder="Mật khẩu...">
-                                <button onclick="copyText('${safePass}', 'Mật khẩu', this)" class="copy-btn text-xs px-2.5 py-1.5" title="Sao chép">📋 Copy</button>
+                                <button onclick="copyDataValue(${index}, 'password', 'Mật khẩu', this)" class="copy-btn text-xs px-2.5 py-1.5" title="Sao chép">📋 Copy</button>
                             </div>
                         </td>`;
 
@@ -440,9 +471,6 @@
                 container.innerHTML = tableHtml;
             } else {
                 accounts.forEach((item, index) => {
-                    let safeUser = (item.username || '').replace(/'/g, "\\'");
-                    let safePass = (item.password || '').replace(/'/g, "\\'");
-
                     let card = document.createElement('div');
                     card.className = "bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-2.5 relative shadow-md";
                     
@@ -469,14 +497,14 @@
                                 <label class="text-[10px] font-semibold text-slate-300 block mb-0.5">Tài khoản</label>
                                 <div class="flex items-center gap-1.5">
                                     <input type="text" value="${item.username || ''}" oninput="accounts[${index}].username = this.value; triggerAutoSync();" class="sheets-cell text-cyan-300 font-bold" placeholder="User...">
-                                    <button onclick="copyText('${safeUser}', 'Tài khoản', this)" class="copy-btn px-2.5 py-1.5 font-bold">📋 Copy</button>
+                                    <button onclick="copyDataValue(${index}, 'username', 'Tài khoản', this)" class="copy-btn px-2.5 py-1.5 font-bold">📋 Copy</button>
                                 </div>
                             </div>
                             <div>
                                 <label class="text-[10px] font-semibold text-slate-300 block mb-0.5">Mật khẩu</label>
                                 <div class="flex items-center gap-1.5">
                                     <input type="text" value="${item.password || ''}" oninput="accounts[${index}].password = this.value; triggerAutoSync();" class="sheets-cell text-amber-300 font-bold" placeholder="Pass...">
-                                    <button onclick="copyText('${safePass}', 'Mật khẩu', this)" class="copy-btn px-2.5 py-1.5 font-bold">📋 Copy</button>
+                                    <button onclick="copyDataValue(${index}, 'password', 'Mật khẩu', this)" class="copy-btn px-2.5 py-1.5 font-bold">📋 Copy</button>
                                 </div>
                             </div>
                         </div>
