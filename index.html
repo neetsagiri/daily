@@ -18,7 +18,7 @@
             background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
         }
 
-        input, code, .mono-text {
+        input, textarea, code, .mono-text {
             font-family: 'JetBrains Mono', monospace;
         }
 
@@ -55,17 +55,26 @@
             font-weight: 500;
             letter-spacing: 0.2px;
             transition: all 0.2s;
-            overflow-x: auto;
-            text-overflow: clip;
+            outline: none;
         }
-        .sheets-cell::-webkit-scrollbar { height: 2px; }
-        .sheets-cell::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 2px; }
         .sheets-cell:focus { 
             border-color: #06b6d4; 
             background: rgba(15, 23, 42, 0.98); 
             box-shadow: 0 0 12px rgba(6, 182, 212, 0.25); 
-            outline: none; 
         }
+
+        /* Ô GHI CHÚ TỰ CO GIÃN ĐA DÒNG */
+        .note-cell {
+            resize: none;
+            min-height: 34px;
+            max-height: 120px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-y: auto;
+        }
+        .note-cell::-webkit-scrollbar { width: 4px; }
+        .note-cell::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 4px; }
 
         .action-btn {
             background: rgba(30, 41, 59, 0.8);
@@ -137,7 +146,7 @@
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-slate-300 block mb-1">Ghi chú</label>
-                    <input type="text" id="inputNote" class="sheets-cell text-purple-300 font-medium" placeholder="Nhập ghi chú...">
+                    <textarea id="inputNote" rows="2" class="sheets-cell note-cell text-purple-300 font-medium" placeholder="Nhập ghi chú..."></textarea>
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
@@ -178,7 +187,7 @@
                         <span id="statusText" class="text-slate-300">Đã lưu</span>
                     </div>
                 </h1>
-                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Quản lý và đồng bộ tài khoản game trực tiếp với Google Sheets</p>
+                <p class="text-[11px] font-medium text-slate-400 mt-0.5">Quản lý tài khoản game đồng bộ Google Sheets - Ghi chú mở rộng tự động</p>
             </div>
 
             <!-- CÁC NÚT TÁC VỤ -->
@@ -225,17 +234,22 @@
         // Icon Con Mắt SVG tối giản
         function getEyeIconSvg(isOpen) {
             if (isOpen) {
-                // Mắt mở
                 return `<svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>`;
             } else {
-                // Mắt gạch chéo (đang ẩn)
                 return `<svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
                 </svg>`;
             }
+        }
+
+        // Tự co giãn chiều cao textarea theo nội dung nhập
+        function autoResizeTextarea(textarea) {
+            if (!textarea) return;
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
         }
 
         function updateGlobalPassButtonUI() {
@@ -491,7 +505,7 @@
                                     <th class="p-3.5">T7</th>
                                     <th class="p-3.5">CN</th>
                                     <th class="p-3.5">CỬA</th>
-                                    <th class="p-3.5 text-left pl-4">GHI CHÚ</th>
+                                    <th class="p-3.5 text-left pl-4 min-w-[200px]">GHI CHÚ</th>
                                     <th class="p-3.5">XÓA</th>
                                 </tr>
                             </thead>
@@ -500,16 +514,17 @@
                 accounts.forEach((item, index) => {
                     const isPassVisible = revealedPassIndexes.has(index);
                     const inputType = isPassVisible ? 'text' : 'password';
+                    const noteText = item.note || '';
 
                     tableHtml += `<tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="p-3.5 text-xs font-bold text-slate-500">${index + 1}</td>
-                        <td class="p-2.5 text-left">
+                        <td class="p-3.5 text-xs font-bold text-slate-500 align-top">${index + 1}</td>
+                        <td class="p-2.5 text-left align-top">
                             <div class="flex items-center gap-1.5">
                                 <input type="text" value="${item.username || ''}" oninput="accounts[${index}].username = this.value; triggerAutoSync();" class="sheets-cell text-cyan-300 font-bold" placeholder="Tài khoản...">
                                 <button onclick="copyDataValue(${index}, 'username', 'Tài khoản', this)" class="action-btn" title="Sao chép">📋 Copy</button>
                             </div>
                         </td>
-                        <td class="p-2.5 text-left">
+                        <td class="p-2.5 text-left align-top">
                             <div class="flex items-center gap-1.5">
                                 <input type="${inputType}" value="${item.password || ''}" oninput="accounts[${index}].password = this.value; triggerAutoSync();" class="sheets-cell text-amber-300 font-bold" placeholder="Mật khẩu...">
                                 <button onclick="togglePasswordSingle(${index})" class="action-btn px-2 text-slate-400 hover:text-cyan-300" title="${isPassVisible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}">
@@ -522,13 +537,14 @@
                     const days = ['thu2', 'thu3', 'thu4', 'thu5', 'thu6', 'thu7', 'cn', 'cua'];
                     days.forEach(day => {
                         let checked = (item[day] === true || item[day] === "TRUE") ? 'checked' : '';
-                        tableHtml += `<td class="p-2.5 text-center"><input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; updateProgress(); executeSync();" class="gaming-checkbox"></td>`;
+                        tableHtml += `<td class="p-2.5 text-center align-top pt-3.5"><input type="checkbox" ${checked} onchange="accounts[${index}].${day} = this.checked; updateProgress(); executeSync();" class="gaming-checkbox"></td>`;
                     });
 
-                    tableHtml += `<td class="p-2.5 text-left pl-4">
-                            <input type="text" value="${item.note || ''}" oninput="accounts[${index}].note = this.value; triggerAutoSync();" class="sheets-cell text-purple-300" placeholder="Ghi chú...">
+                    // TEXTAREA GHI CHÚ TỰ CO GIÃN ĐA DÒNG KÈM TOOLTIP TITLE
+                    tableHtml += `<td class="p-2.5 text-left pl-4 align-top">
+                            <textarea rows="1" title="${noteText.replace(/"/g, '&quot;')}" oninput="accounts[${index}].note = this.value; autoResizeTextarea(this); this.title = this.value; triggerAutoSync();" class="sheets-cell note-cell text-purple-300 font-medium" placeholder="Ghi chú...">${noteText}</textarea>
                         </td>
-                        <td class="p-2.5 text-center">
+                        <td class="p-2.5 text-center align-top pt-3">
                             <button onclick="promptDelete(${index})" class="text-slate-500 hover:text-red-400 font-bold p-1 cursor-pointer text-sm" title="Xóa dòng">✕</button>
                         </td>
                     </tr>`;
@@ -539,6 +555,7 @@
                 accounts.forEach((item, index) => {
                     const isPassVisible = revealedPassIndexes.has(index);
                     const inputType = isPassVisible ? 'text' : 'password';
+                    const noteText = item.note || '';
 
                     let card = document.createElement('div');
                     card.className = "bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-2.5 relative shadow-md";
@@ -588,13 +605,15 @@
                         </div>
                         <div>
                             <label class="text-[10px] font-semibold text-slate-300 block mb-0.5">Ghi chú</label>
-                            <input type="text" value="${item.note || ''}" oninput="accounts[${index}].note = this.value; triggerAutoSync();" class="sheets-cell text-purple-300 font-medium" placeholder="Ghi chú thêm...">
+                            <textarea rows="2" title="${noteText.replace(/"/g, '&quot;')}" oninput="accounts[${index}].note = this.value; autoResizeTextarea(this); this.title = this.value; triggerAutoSync();" class="sheets-cell note-cell text-purple-300 font-medium" placeholder="Ghi chú thêm...">${noteText}</textarea>
                         </div>
                     `;
                     container.appendChild(card);
                 });
             }
 
+            // Tự động căn chỉnh chiều cao cho toàn bộ textarea sau khi render
+            document.querySelectorAll('.note-cell').forEach(el => autoResizeTextarea(el));
             updateProgress();
         }
 
